@@ -1,0 +1,15 @@
+-- comments -----------------------
+
+comment    "#" ;
+
+-- Expressions --------------------
+
+EAdd.      Expr ::= Expr1 "+" Expr ;
+
+ESub.      Expr1 ::= Expr2 "-" Expr1 ;
+
+EMul.      Expr2 ::= Expr3 "*" Expr2 ;
+
+EDiv.      Expr3 ::= Expr4 "/" Expr3 ;
+
+coercions  Expr 6 ;
