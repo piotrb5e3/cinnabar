@@ -1,0 +1,40 @@
+a = 1 + 2 * 4 ; // == 9
+
+b = 11 % 5 ; // ==1
+
+mul = lambda y : lambda x : x * y;
+
+mul7 = mul(7);
+
+c = mul7(7) + 1; // == 50
+
+if(a != 9 || b <= 0 || mul7(0) > 1) {
+    print "Problem!";
+}
+
+x = true == false || (false && true) || !!!true;
+
+if(x) {
+    print "Problem 2!";
+}
+
+c = 1 if a == 9 else 2;
+
+d = #{
+    aaa : -1,
+    bbb : 2,
+    ccc : lambda a, b, c : a + (-b) + a,
+};
+
+if(d.aaa != 1 || d.bbb != 2) {
+    print "Problem 3!";
+}
+
+d.aaa = d.bbb;
+
+d["fff"] = d["aaa"];
+
+if((d["aaa"]) != 2 || d.fff != 2) {
+    print "Problem 4!";
+}
+

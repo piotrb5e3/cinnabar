@@ -1,15 +1,86 @@
--- comments -----------------------
+-- Programs -----------------------
 
-comment    "#" ;
+entrypoints Program ;
+
+Prog.      Program ::= [Stmt] ;
+
+-- Statements ---------------------
+
+SBlock.    Block ::= "{" [Stmt] "}";
+separator  Stmt "" ;
+_.         Stmt ::= Stmt1 ";" ;
+SWhile.    Stmt ::= "while" "(" Expr ")" Block ;
+SCond.     Stmt ::= "if" "(" Expr ")" Block ;
+SCondElse. Stmt ::= "if" "(" Expr ")" Block "else" Block ;
+
+SAssing.   Stmt1 ::= LVal "=" Expr ;
+_.         LVal ::= LVal1 ;
+ATuple.    LVal ::= "{" [LVal1] "}";
+separator  nonempty LVal1 "," ;
+AAt.       LVal1 ::= Expr8 "[" Expr "]" ;
+AMember.   LVal1 ::= Expr8 "." Ident ;
+AVar.      LVal1 ::= Ident ;
+
+SReturn.   Stmt1 ::= "return" Expr ;
+SPrint.    Stmt1 ::= "print" Expr ;
+SAssert.   Stmt1 ::= "assert" Expr ;
+SExpr.     Stmt1 ::= Expr ;
 
 -- Expressions --------------------
 
-EAdd.      Expr ::= Expr1 "+" Expr ;
+ELambda.   Expr ::= "lambda" [Arg] ":" Expr ;
+EFun.      Expr ::= "fun" "(" [Arg] ")" Block ;
+separator  Arg "," ;
+FArg.      Arg ::= Ident ;
 
-ESub.      Expr1 ::= Expr2 "-" Expr1 ;
+EIf.       Expr ::= Expr1 "if" Expr "else" Expr ;
+EOr.       Expr1 ::= Expr2 "||" Expr1 ;
+EAnd.      Expr2 ::= Expr3 "&&" Expr2 ;
+ERel.      Expr3 ::= Expr4 RelOp Expr3 ;
+EAdd.      Expr4 ::= Expr5 AddOp Expr4 ;
+EMul.      Expr5 ::= Expr6 MulOp Expr5 ;
+EPow.      Expr6 ::= Expr7 "^" Expr6 ;
+ENot.      Expr7 ::= "!" Expr7 ;
+ENeg.      Expr7 ::= "-" Expr7 ;
+ECall.     Expr8 ::= Expr8 "(" [Expr] ")" ;
+EMember.   Expr8 ::= Expr8 "." Ident ;
+EAt.       Expr8 ::= Expr8 "[" Expr "]" ;
+EExtend.   Expr10 ::= "extend" Expr "with" Expr10 ;
+ENew.      Expr11 ::= "new" Expr10 "(" [Expr] ")" ;
 
-EMul.      Expr2 ::= Expr3 "*" Expr2 ;
+EString.   Expr12 ::= String ;
+ELitInt.   Expr12 ::= Integer ;
+ELitTrue.  Expr12 ::= "true" ;
+ELitFalse. Expr12 ::= "false" ;
+EVar.      Expr12 ::= Ident ;
+EList.     Expr12 ::= "[" [Expr] "]" ;
+EListComp. Expr12 ::= "[" Expr "for" LVal "in" Expr "]" ;
+separator Expr "," ;
+EDict.     Expr12 ::= "#{" [DictMap]  "}" ;
+EDictMap.  DictMap ::= Expr ":" Expr ;
+separator DictMap "," ;
 
-EDiv.      Expr3 ::= Expr4 "/" Expr3 ;
+coercions  Expr 12 ;
 
-coercions  Expr 6 ;
+
+-- Operators -----------------------
+
+Lt.        RelOp ::= "<" ;
+Le.        RelOp ::= "<=" ;
+Gt.        RelOp ::= ">" ;
+Ge.        RelOp ::= ">=" ;
+Eq.        RelOp ::= "==" ;
+Ne.        RelOp ::= "!=" ;
+
+Add.       AddOp ::= "+" ;
+Sub.       AddOp ::= "-" ;
+
+Mul.       MulOp ::= "*" ;
+Div.       MulOp ::= "/" ;
+Mod.       MulOp ::= "%" ;
+
+-- Comments -----------------------
+
+comment    "//" ;
+comment "/*" "*/" ;
+

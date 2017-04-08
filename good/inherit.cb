@@ -1,0 +1,34 @@
+foo = extend object with #{
+    "bar" : 1337,
+    "foobar" : lambda self, x: self.bar * x,
+    "init" : fun (self, x, y) {
+        self.boofar = x * y;
+    }
+};
+
+barfoo = extend foo with #{
+    "bar" : 42,
+    "barfoo" : fun (self, f) {
+        return f(self);
+    }
+};
+
+
+barfoo2 = new barfoo(1, 3);
+assert barfoo2.bar == 42;
+assert barfoo2.boofar == 3;
+assert barfoo2.barfoo(lambda x: x.bar) == 42;
+
+
+fooz = new foo(99, 12);
+assert fooz.boofar == 1188;
+assert fooz.bar == 1337;
+foo.bar = 8008;
+assert fooz.bar == 1337;
+
+
+foox = new fooz(12, 11);
+assert foox.bar == 1337;
+assert foox.foobar(1) == 1337;
+
+

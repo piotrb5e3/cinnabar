@@ -1,0 +1,16 @@
+min = fun (x, y) {
+ if( x <= y ) {
+    return x;
+ } else {
+    return y;
+ }
+};
+
+a = 103;
+b = 111;
+
+c = min(a, b);
+d = min(88, c);
+
+assert c == 103;
+assert d == 88;
