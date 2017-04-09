@@ -50,8 +50,8 @@ The reserved words used in cinnabar are the following: \\
 The symbols used in cinnabar are the following: \\
 
 \begin{tabular}{lll}
-{\symb{\{}} &{\symb{\}}} &{\symb{;}} \\
-{\symb{(}} &{\symb{)}} &{\symb{{$=$}}} \\
+{\symb{\{}} &{\symb{\}}} &{\symb{(}} \\
+{\symb{)}} &{\symb{{$=$}}} &{\symb{;}} \\
 {\symb{,}} &{\symb{[}} &{\symb{]}} \\
 {\symb{.}} &{\symb{:}} &{\symb{{$|$}{$|$}}} \\
 {\symb{\&\&}} &{\symb{{\textasciicircum}}} &{\symb{!}} \\
@@ -84,18 +84,14 @@ All other symbols are terminals.\\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Stmt}} & {\arrow}  &{\nonterminal{Stmt1}} {\terminal{;}}  \\
- & {\delimit}  &{\terminal{while}} {\terminal{(}} {\nonterminal{Expr}} {\terminal{)}} {\nonterminal{Block}}  \\
+{\nonterminal{Stmt}} & {\arrow}  &{\terminal{while}} {\terminal{(}} {\nonterminal{Expr}} {\terminal{)}} {\nonterminal{Block}}  \\
  & {\delimit}  &{\terminal{if}} {\terminal{(}} {\nonterminal{Expr}} {\terminal{)}} {\nonterminal{Block}}  \\
  & {\delimit}  &{\terminal{if}} {\terminal{(}} {\nonterminal{Expr}} {\terminal{)}} {\nonterminal{Block}} {\terminal{else}} {\nonterminal{Block}}  \\
-\end{tabular}\\
-
-\begin{tabular}{lll}
-{\nonterminal{Stmt1}} & {\arrow}  &{\nonterminal{LVal}} {\terminal{{$=$}}} {\nonterminal{Expr}}  \\
- & {\delimit}  &{\terminal{return}} {\nonterminal{Expr}}  \\
- & {\delimit}  &{\terminal{print}} {\nonterminal{Expr}}  \\
- & {\delimit}  &{\terminal{assert}} {\nonterminal{Expr}}  \\
- & {\delimit}  &{\nonterminal{Expr}}  \\
+ & {\delimit}  &{\nonterminal{LVal}} {\terminal{{$=$}}} {\nonterminal{Expr}} {\terminal{;}}  \\
+ & {\delimit}  &{\terminal{return}} {\nonterminal{Expr}} {\terminal{;}}  \\
+ & {\delimit}  &{\terminal{print}} {\nonterminal{Expr}} {\terminal{;}}  \\
+ & {\delimit}  &{\terminal{assert}} {\nonterminal{Expr}} {\terminal{;}}  \\
+ & {\delimit}  &{\nonterminal{Expr}} {\terminal{;}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}

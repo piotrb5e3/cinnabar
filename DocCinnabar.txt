@@ -38,8 +38,8 @@ The reserved words used in cinnabar are the following:
   | ``true`` | ``while`` | ``with`` | 
 
 The symbols used in cinnabar are the following:
-  | { | } | ; | (
-  | ) | = | , | [
+  | { | } | ( | )
+  | = | ; | , | [
   | ] | . | : | ||
   | && | ^ | ! | -
   | #{ | < | <= | >
@@ -59,15 +59,14 @@ All other symbols are terminals.
   | //Block// | -> | ``{`` //[Stmt]// ``}`` 
   | //[Stmt]// | -> | **eps**
   |  |  **|**  | //Stmt// //[Stmt]// 
-  | //Stmt// | -> | //Stmt1// ``;`` 
-  |  |  **|**  | ``while`` ``(`` //Expr// ``)`` //Block// 
+  | //Stmt// | -> | ``while`` ``(`` //Expr// ``)`` //Block// 
   |  |  **|**  | ``if`` ``(`` //Expr// ``)`` //Block// 
   |  |  **|**  | ``if`` ``(`` //Expr// ``)`` //Block// ``else`` //Block// 
-  | //Stmt1// | -> | //LVal// ``=`` //Expr// 
-  |  |  **|**  | ``return`` //Expr// 
-  |  |  **|**  | ``print`` //Expr// 
-  |  |  **|**  | ``assert`` //Expr// 
-  |  |  **|**  | //Expr// 
+  |  |  **|**  | //LVal// ``=`` //Expr// ``;`` 
+  |  |  **|**  | ``return`` //Expr// ``;`` 
+  |  |  **|**  | ``print`` //Expr// ``;`` 
+  |  |  **|**  | ``assert`` //Expr// ``;`` 
+  |  |  **|**  | //Expr// ``;`` 
   | //LVal// | -> | //LVal1// 
   |  |  **|**  | ``{`` //[LVal1]// ``}`` 
   | //[LVal1]// | -> | //LVal1// 

@@ -74,16 +74,14 @@ Block : '{' ListStmt '}' { AbsCinnabar.SBlock (reverse $2) }
 ListStmt :: { [Stmt] }
 ListStmt : {- empty -} { [] } | ListStmt Stmt { flip (:) $1 $2 }
 Stmt :: { Stmt }
-Stmt : Stmt1 ';' { $1 }
-     | 'while' '(' Expr ')' Block { AbsCinnabar.SWhile $3 $5 }
+Stmt : 'while' '(' Expr ')' Block { AbsCinnabar.SWhile $3 $5 }
      | 'if' '(' Expr ')' Block { AbsCinnabar.SCond $3 $5 }
      | 'if' '(' Expr ')' Block 'else' Block { AbsCinnabar.SCondElse $3 $5 $7 }
-Stmt1 :: { Stmt }
-Stmt1 : LVal '=' Expr { AbsCinnabar.SAssing $1 $3 }
-      | 'return' Expr { AbsCinnabar.SReturn $2 }
-      | 'print' Expr { AbsCinnabar.SPrint $2 }
-      | 'assert' Expr { AbsCinnabar.SAssert $2 }
-      | Expr { AbsCinnabar.SExpr $1 }
+     | LVal '=' Expr ';' { AbsCinnabar.SAssing $1 $3 }
+     | 'return' Expr ';' { AbsCinnabar.SReturn $2 }
+     | 'print' Expr ';' { AbsCinnabar.SPrint $2 }
+     | 'assert' Expr ';' { AbsCinnabar.SAssert $2 }
+     | Expr ';' { AbsCinnabar.SExpr $1 }
 LVal :: { LVal }
 LVal : LVal1 { $1 } | '{' ListLVal1 '}' { AbsCinnabar.ATuple $2 }
 ListLVal1 :: { [LVal] }
