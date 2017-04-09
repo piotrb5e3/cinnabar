@@ -131,6 +131,7 @@ instance Print Expr where
     EAt expr1 expr2 -> prPrec i 8 (concatD [prt 8 expr1, doc (showString "["), prt 0 expr2, doc (showString "]")])
     EExtend expr1 expr2 -> prPrec i 9 (concatD [doc (showString "extend"), prt 0 expr1, doc (showString "with"), prt 9 expr2])
     ENew expr exprs -> prPrec i 9 (concatD [doc (showString "new"), prt 9 expr, doc (showString "("), prt 0 exprs, doc (showString ")")])
+    EChar c -> prPrec i 10 (concatD [prt 0 c])
     EString str -> prPrec i 10 (concatD [prt 0 str])
     ELitInt n -> prPrec i 10 (concatD [prt 0 n])
     ELitTrue -> prPrec i 10 (concatD [doc (showString "true")])

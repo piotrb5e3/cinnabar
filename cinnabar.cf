@@ -46,6 +46,7 @@ EAt.       Expr8 ::= Expr8 "[" Expr "]" ;
 EExtend.   Expr9 ::= "extend" Expr "with" Expr9 ;
 ENew.      Expr9 ::= "new" Expr9 "(" [Expr] ")" ;
 
+EChar.     Expr10 ::= Char ;
 EString.   Expr10 ::= String ;
 ELitInt.   Expr10 ::= Integer ;
 ELitTrue.  Expr10 ::= "true" ;

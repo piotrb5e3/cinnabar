@@ -46,6 +46,7 @@ data Expr
     | EAt Expr Expr
     | EExtend Expr Expr
     | ENew Expr [Expr]
+    | EChar Char
     | EString String
     | ELitInt Integer
     | ELitTrue

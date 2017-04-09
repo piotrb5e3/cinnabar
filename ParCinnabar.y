@@ -57,6 +57,7 @@ import ErrM
   '}' { PT _ (TS _ 42) }
 
 L_ident  { PT _ (TV $$) }
+L_charac { PT _ (TC $$) }
 L_quoted { PT _ (TL $$) }
 L_integ  { PT _ (TI $$) }
 
@@ -64,6 +65,7 @@ L_integ  { PT _ (TI $$) }
 %%
 
 Ident   :: { Ident }   : L_ident  { Ident $1 }
+Char    :: { Char }    : L_charac { (read ( $1)) :: Char }
 String  :: { String }  : L_quoted {  $1 }
 Integer :: { Integer } : L_integ  { (read ( $1)) :: Integer }
 
@@ -128,7 +130,8 @@ Expr9 : 'extend' Expr 'with' Expr9 { AbsCinnabar.EExtend $2 $4 }
       | 'new' Expr9 '(' ListExpr ')' { AbsCinnabar.ENew $2 $4 }
       | Expr10 { $1 }
 Expr10 :: { Expr }
-Expr10 : String { AbsCinnabar.EString $1 }
+Expr10 : Char { AbsCinnabar.EChar $1 }
+       | String { AbsCinnabar.EString $1 }
        | Integer { AbsCinnabar.ELitInt $1 }
        | 'true' { AbsCinnabar.ELitTrue }
        | 'false' { AbsCinnabar.ELitFalse }
