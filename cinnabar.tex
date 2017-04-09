@@ -5,6 +5,9 @@
 \title{The Language Cinnabar}
 \setlength{\parindent}{0mm}
 \setlength{\parskip}{1mm}
+
+\usepackage{minted}
+
 \begin{document}
 
 \maketitle
@@ -20,11 +23,11 @@
 
 \section*{Language features}
 
-Cinnabar is an object--oriented, imperative programming language drawing inspiration from C, Python and JavaScript. 
+Cinnabar is an object-oriented, imperative programming language drawing inspiration from C, Python and JavaScript. 
 
 \subsection*{Types}
 
-Cinnabar is a dynamically--typed language. Built--in types are:
+Cinnabar is a dynamically-typed language. Built-in types are:
 \begin{itemize}
 \item \emph{char} -- Unicode characters,
 \item \emph{bool} -- either \emph{true} or \emph{false},
@@ -40,7 +43,7 @@ Cinnabar has loops, conditional expressions, assignment with list unpacking, run
 
 \subsection*{Expressions}
 
-Cinnabar supports arithmetic, boolean and lambda expressions, python--style \emph{if-then-else}, list and dictionary literals, list comprehension and inheritance expressions.
+Cinnabar supports arithmetic, boolean and lambda expressions, python-style \emph{if-then-else}, list and dictionary literals, list comprehension and inheritance expressions.
 
 \subsection*{Functions}
 
@@ -49,7 +52,7 @@ Calls with missing or excess parameters are considered errors.
 
 \subsection*{Objects}
 
-Cinnabar uses prototype inheritance -- {\tt new} operator creates a shallow copy and calls the {\tt init} method with given parameters; {\tt extend with} operator creates a shallow copy, then adds or replaces fields and methods with data from a provided dictionary.
+Cinnabar uses prototype inheritance: {\tt new} operator creates a shallow copy and calls the {\tt init} method with given parameters; {\tt extend with} operator creates a shallow copy, then adds or replaces fields and methods with data from a provided dictionary.
 
 
 \section*{The lexical structure of cinnabar}
@@ -61,13 +64,15 @@ reserved words excluded.
 
 \subsection*{Literals}
 
+Integer literals \nonterminal{Integer} are sequences of decimal digits.\\
+String literals \nonterminal{String} are sequences of Unicode surrounded with double quotes.\\
+Character literals \nonterminal{Char} are single Unicode symbols surrounded with single quotes.
 
 
 
 
 
 \subsection*{Reserved words and symbols}
-The set of reserved words is the set of terminals appearing in the grammar. Those reserved words that consist of non-letter characters are called symbols, and they are treated in a different way from those that are similar to identifiers. The lexer follows rules familiar from languages like Haskell, C, and Java, including longest match and spacing conventions.
 
 The reserved words used in cinnabar are the following: \\
 
@@ -254,6 +259,8 @@ All other symbols are terminals.\\
 \end{tabular}\\
 
 \section*{Example programs}
+
+\inputminted{js}{good/simple.cb}
 
 \end{document}
 

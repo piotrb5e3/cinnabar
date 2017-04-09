@@ -2,4 +2,12 @@
 *.swp
 *.o
 *.hi
+*.pdf
+_*
+.*
+*.aux
+*.dvi
+*.log
+*.pyg
+*.py
 TestCinnabar
