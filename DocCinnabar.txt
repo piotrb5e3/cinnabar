@@ -75,14 +75,13 @@ All other symbols are terminals.
   | //LVal1// | -> | //Expr8// ``[`` //Expr// ``]`` 
   |  |  **|**  | //Expr8// ``.`` //Ident// 
   |  |  **|**  | //Ident// 
-  | //Expr// | -> | ``lambda`` //[Arg]// ``:`` //Expr// 
-  |  |  **|**  | ``fun`` ``(`` //[Arg]// ``)`` //Block// 
+  | //Expr// | -> | ``lambda`` //[Ident]// ``:`` //Expr// 
+  |  |  **|**  | ``fun`` ``(`` //[Ident]// ``)`` //Block// 
   |  |  **|**  | //Expr1// ``if`` //Expr// ``else`` //Expr// 
   |  |  **|**  | //Expr1// 
-  | //[Arg]// | -> | **eps**
-  |  |  **|**  | //Arg// 
-  |  |  **|**  | //Arg// ``,`` //[Arg]// 
-  | //Arg// | -> | //Ident// 
+  | //[Ident]// | -> | **eps**
+  |  |  **|**  | //Ident// 
+  |  |  **|**  | //Ident// ``,`` //[Ident]// 
   | //Expr1// | -> | //Expr2// ``||`` //Expr1// 
   |  |  **|**  | //Expr2// 
   | //Expr2// | -> | //Expr3// ``&&`` //Expr2// 
@@ -102,11 +101,10 @@ All other symbols are terminals.
   |  |  **|**  | //Expr8// ``.`` //Ident// 
   |  |  **|**  | //Expr8// ``[`` //Expr// ``]`` 
   |  |  **|**  | //Expr9// 
-  | //Expr10// | -> | ``extend`` //Expr// ``with`` //Expr10// 
-  |  |  **|**  | //Expr11// 
-  | //Expr11// | -> | ``new`` //Expr10// ``(`` //[Expr]// ``)`` 
-  |  |  **|**  | //Expr12// 
-  | //Expr12// | -> | //String// 
+  | //Expr9// | -> | ``extend`` //Expr// ``with`` //Expr9// 
+  |  |  **|**  | ``new`` //Expr9// ``(`` //[Expr]// ``)`` 
+  |  |  **|**  | //Expr10// 
+  | //Expr10// | -> | //String// 
   |  |  **|**  | //Integer// 
   |  |  **|**  | ``true`` 
   |  |  **|**  | ``false`` 
@@ -122,7 +120,6 @@ All other symbols are terminals.
   | //[DictMap]// | -> | **eps**
   |  |  **|**  | //DictMap// 
   |  |  **|**  | //DictMap// ``,`` //[DictMap]// 
-  | //Expr9// | -> | //Expr10// 
   | //RelOp// | -> | ``<`` 
   |  |  **|**  | ``<=`` 
   |  |  **|**  | ``>`` 

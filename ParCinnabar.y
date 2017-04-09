@@ -93,16 +93,14 @@ LVal1 : Expr8 '[' Expr ']' { AbsCinnabar.AAt $1 $3 }
       | Expr8 '.' Ident { AbsCinnabar.AMember $1 $3 }
       | Ident { AbsCinnabar.AVar $1 }
 Expr :: { Expr }
-Expr : 'lambda' ListArg ':' Expr { AbsCinnabar.ELambda $2 $4 }
-     | 'fun' '(' ListArg ')' Block { AbsCinnabar.EFun $3 $5 }
+Expr : 'lambda' ListIdent ':' Expr { AbsCinnabar.ELambda $2 $4 }
+     | 'fun' '(' ListIdent ')' Block { AbsCinnabar.EFun $3 $5 }
      | Expr1 'if' Expr 'else' Expr { AbsCinnabar.EIf $1 $3 $5 }
      | Expr1 { $1 }
-ListArg :: { [Arg] }
-ListArg : {- empty -} { [] }
-        | Arg { (:[]) $1 }
-        | Arg ',' ListArg { (:) $1 $3 }
-Arg :: { Arg }
-Arg : Ident { AbsCinnabar.FArg $1 }
+ListIdent :: { [Ident] }
+ListIdent : {- empty -} { [] }
+          | Ident { (:[]) $1 }
+          | Ident ',' ListIdent { (:) $1 $3 }
 Expr1 :: { Expr }
 Expr1 : Expr2 '||' Expr1 { AbsCinnabar.EOr $1 $3 } | Expr2 { $1 }
 Expr2 :: { Expr }
@@ -127,14 +125,12 @@ Expr8 : Expr8 '(' ListExpr ')' { AbsCinnabar.ECall $1 $3 }
       | Expr8 '.' Ident { AbsCinnabar.EMember $1 $3 }
       | Expr8 '[' Expr ']' { AbsCinnabar.EAt $1 $3 }
       | Expr9 { $1 }
+Expr9 :: { Expr }
+Expr9 : 'extend' Expr 'with' Expr9 { AbsCinnabar.EExtend $2 $4 }
+      | 'new' Expr9 '(' ListExpr ')' { AbsCinnabar.ENew $2 $4 }
+      | Expr10 { $1 }
 Expr10 :: { Expr }
-Expr10 : 'extend' Expr 'with' Expr10 { AbsCinnabar.EExtend $2 $4 }
-       | Expr11 { $1 }
-Expr11 :: { Expr }
-Expr11 : 'new' Expr10 '(' ListExpr ')' { AbsCinnabar.ENew $2 $4 }
-       | Expr12 { $1 }
-Expr12 :: { Expr }
-Expr12 : String { AbsCinnabar.EString $1 }
+Expr10 : String { AbsCinnabar.EString $1 }
        | Integer { AbsCinnabar.ELitInt $1 }
        | 'true' { AbsCinnabar.ELitTrue }
        | 'false' { AbsCinnabar.ELitFalse }
@@ -153,8 +149,6 @@ ListDictMap :: { [DictMap] }
 ListDictMap : {- empty -} { [] }
             | DictMap { (:[]) $1 }
             | DictMap ',' ListDictMap { (:) $1 $3 }
-Expr9 :: { Expr }
-Expr9 : Expr10 { $1 }
 RelOp :: { RelOp }
 RelOp : '<' { AbsCinnabar.Lt }
       | '<=' { AbsCinnabar.Le }

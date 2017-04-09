@@ -28,10 +28,9 @@ SExpr.     Stmt1 ::= Expr ;
 
 -- Expressions --------------------
 
-ELambda.   Expr ::= "lambda" [Arg] ":" Expr ;
-EFun.      Expr ::= "fun" "(" [Arg] ")" Block ;
-separator  Arg "," ;
-FArg.      Arg ::= Ident ;
+ELambda.   Expr ::= "lambda" [Ident] ":" Expr ;
+EFun.      Expr ::= "fun" "(" [Ident] ")" Block ;
+separator  Ident "," ;
 
 EIf.       Expr ::= Expr1 "if" Expr "else" Expr ;
 EOr.       Expr1 ::= Expr2 "||" Expr1 ;
@@ -45,22 +44,22 @@ ENeg.      Expr7 ::= "-" Expr7 ;
 ECall.     Expr8 ::= Expr8 "(" [Expr] ")" ;
 EMember.   Expr8 ::= Expr8 "." Ident ;
 EAt.       Expr8 ::= Expr8 "[" Expr "]" ;
-EExtend.   Expr10 ::= "extend" Expr "with" Expr10 ;
-ENew.      Expr11 ::= "new" Expr10 "(" [Expr] ")" ;
+EExtend.   Expr9 ::= "extend" Expr "with" Expr9 ;
+ENew.      Expr9 ::= "new" Expr9 "(" [Expr] ")" ;
 
-EString.   Expr12 ::= String ;
-ELitInt.   Expr12 ::= Integer ;
-ELitTrue.  Expr12 ::= "true" ;
-ELitFalse. Expr12 ::= "false" ;
-EVar.      Expr12 ::= Ident ;
-EList.     Expr12 ::= "[" [Expr] "]" ;
-EListComp. Expr12 ::= "[" Expr "for" LVal "in" Expr "]" ;
+EString.   Expr10 ::= String ;
+ELitInt.   Expr10 ::= Integer ;
+ELitTrue.  Expr10 ::= "true" ;
+ELitFalse. Expr10 ::= "false" ;
+EVar.      Expr10 ::= Ident ;
+EList.     Expr10 ::= "[" [Expr] "]" ;
+EListComp. Expr10 ::= "[" Expr "for" LVal "in" Expr "]" ;
 separator Expr "," ;
-EDict.     Expr12 ::= "#{" [DictMap]  "}" ;
+EDict.     Expr10 ::= "#{" [DictMap]  "}" ;
 EDictMap.  DictMap ::= Expr ":" Expr ;
 separator DictMap "," ;
 
-coercions  Expr 12 ;
+coercions  Expr 10 ;
 
 
 -- Operators -----------------------

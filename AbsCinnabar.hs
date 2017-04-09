@@ -30,8 +30,8 @@ data LVal
   deriving (Eq, Ord, Show, Read)
 
 data Expr
-    = ELambda [Arg] Expr
-    | EFun [Arg] Block
+    = ELambda [Ident] Expr
+    | EFun [Ident] Block
     | EIf Expr Expr Expr
     | EOr Expr Expr
     | EAnd Expr Expr
@@ -54,9 +54,6 @@ data Expr
     | EList [Expr]
     | EListComp Expr LVal Expr
     | EDict [DictMap]
-  deriving (Eq, Ord, Show, Read)
-
-data Arg = FArg Ident
   deriving (Eq, Ord, Show, Read)
 
 data DictMap = EDictMap Expr Expr

@@ -80,7 +80,9 @@ instance Print Double where
 
 instance Print Ident where
   prt _ (Ident i) = doc (showString ( i))
-
+  prtList _ [] = (concatD [])
+  prtList _ [x] = (concatD [prt 0 x])
+  prtList _ (x:xs) = (concatD [prt 0 x, doc (showString ","), prt 0 xs])
 
 
 instance Print Program where
@@ -113,8 +115,8 @@ instance Print LVal where
   prtList 1 (x:xs) = (concatD [prt 1 x, doc (showString ","), prt 1 xs])
 instance Print Expr where
   prt i e = case e of
-    ELambda args expr -> prPrec i 0 (concatD [doc (showString "lambda"), prt 0 args, doc (showString ":"), prt 0 expr])
-    EFun args block -> prPrec i 0 (concatD [doc (showString "fun"), doc (showString "("), prt 0 args, doc (showString ")"), prt 0 block])
+    ELambda ids expr -> prPrec i 0 (concatD [doc (showString "lambda"), prt 0 ids, doc (showString ":"), prt 0 expr])
+    EFun ids block -> prPrec i 0 (concatD [doc (showString "fun"), doc (showString "("), prt 0 ids, doc (showString ")"), prt 0 block])
     EIf expr1 expr2 expr3 -> prPrec i 0 (concatD [prt 1 expr1, doc (showString "if"), prt 0 expr2, doc (showString "else"), prt 0 expr3])
     EOr expr1 expr2 -> prPrec i 1 (concatD [prt 2 expr1, doc (showString "||"), prt 1 expr2])
     EAnd expr1 expr2 -> prPrec i 2 (concatD [prt 3 expr1, doc (showString "&&"), prt 2 expr2])
@@ -127,22 +129,16 @@ instance Print Expr where
     ECall expr exprs -> prPrec i 8 (concatD [prt 8 expr, doc (showString "("), prt 0 exprs, doc (showString ")")])
     EMember expr id -> prPrec i 8 (concatD [prt 8 expr, doc (showString "."), prt 0 id])
     EAt expr1 expr2 -> prPrec i 8 (concatD [prt 8 expr1, doc (showString "["), prt 0 expr2, doc (showString "]")])
-    EExtend expr1 expr2 -> prPrec i 10 (concatD [doc (showString "extend"), prt 0 expr1, doc (showString "with"), prt 10 expr2])
-    ENew expr exprs -> prPrec i 11 (concatD [doc (showString "new"), prt 10 expr, doc (showString "("), prt 0 exprs, doc (showString ")")])
-    EString str -> prPrec i 12 (concatD [prt 0 str])
-    ELitInt n -> prPrec i 12 (concatD [prt 0 n])
-    ELitTrue -> prPrec i 12 (concatD [doc (showString "true")])
-    ELitFalse -> prPrec i 12 (concatD [doc (showString "false")])
-    EVar id -> prPrec i 12 (concatD [prt 0 id])
-    EList exprs -> prPrec i 12 (concatD [doc (showString "["), prt 0 exprs, doc (showString "]")])
-    EListComp expr1 lval expr2 -> prPrec i 12 (concatD [doc (showString "["), prt 0 expr1, doc (showString "for"), prt 0 lval, doc (showString "in"), prt 0 expr2, doc (showString "]")])
-    EDict dictmaps -> prPrec i 12 (concatD [doc (showString "#{"), prt 0 dictmaps, doc (showString "}")])
-  prtList _ [] = (concatD [])
-  prtList _ [x] = (concatD [prt 0 x])
-  prtList _ (x:xs) = (concatD [prt 0 x, doc (showString ","), prt 0 xs])
-instance Print Arg where
-  prt i e = case e of
-    FArg id -> prPrec i 0 (concatD [prt 0 id])
+    EExtend expr1 expr2 -> prPrec i 9 (concatD [doc (showString "extend"), prt 0 expr1, doc (showString "with"), prt 9 expr2])
+    ENew expr exprs -> prPrec i 9 (concatD [doc (showString "new"), prt 9 expr, doc (showString "("), prt 0 exprs, doc (showString ")")])
+    EString str -> prPrec i 10 (concatD [prt 0 str])
+    ELitInt n -> prPrec i 10 (concatD [prt 0 n])
+    ELitTrue -> prPrec i 10 (concatD [doc (showString "true")])
+    ELitFalse -> prPrec i 10 (concatD [doc (showString "false")])
+    EVar id -> prPrec i 10 (concatD [prt 0 id])
+    EList exprs -> prPrec i 10 (concatD [doc (showString "["), prt 0 exprs, doc (showString "]")])
+    EListComp expr1 lval expr2 -> prPrec i 10 (concatD [doc (showString "["), prt 0 expr1, doc (showString "for"), prt 0 lval, doc (showString "in"), prt 0 expr2, doc (showString "]")])
+    EDict dictmaps -> prPrec i 10 (concatD [doc (showString "#{"), prt 0 dictmaps, doc (showString "}")])
   prtList _ [] = (concatD [])
   prtList _ [x] = (concatD [prt 0 x])
   prtList _ (x:xs) = (concatD [prt 0 x, doc (showString ","), prt 0 xs])

@@ -36,8 +36,8 @@ transLVal x = case x of
   AVar ident -> failure x
 transExpr :: Expr -> Result
 transExpr x = case x of
-  ELambda args expr -> failure x
-  EFun args block -> failure x
+  ELambda idents expr -> failure x
+  EFun idents block -> failure x
   EIf expr1 expr2 expr3 -> failure x
   EOr expr1 expr2 -> failure x
   EAnd expr1 expr2 -> failure x
@@ -60,9 +60,6 @@ transExpr x = case x of
   EList exprs -> failure x
   EListComp expr1 lval expr2 -> failure x
   EDict dictmaps -> failure x
-transArg :: Arg -> Result
-transArg x = case x of
-  FArg ident -> failure x
 transDictMap :: DictMap -> Result
 transDictMap x = case x of
   EDictMap expr1 expr2 -> failure x
