@@ -1,4 +1,4 @@
-min = fun (x, y) {
+min_ = fun (x, y) {
  if( x <= y ) {
     return x;
  } else {
@@ -9,8 +9,8 @@ min = fun (x, y) {
 a = 103;
 b = 111;
 
-c = min(a, b);
-d = min(88, c);
+c = min_(a, b);
+d = min_(88, c);
 
 assert c == 103;
 assert d == 88;
