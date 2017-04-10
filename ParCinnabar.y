@@ -106,16 +106,16 @@ Expr1 : Expr2 '||' Expr1 { AbsCinnabar.EOr $1 $3 } | Expr2 { $1 }
 Expr2 :: { Expr }
 Expr2 : Expr3 '&&' Expr2 { AbsCinnabar.EAnd $1 $3 } | Expr3 { $1 }
 Expr3 :: { Expr }
-Expr3 : Expr4 RelOp Expr3 { AbsCinnabar.ERel $1 $2 $3 }
+Expr3 : Expr4 RelOp Expr4 { AbsCinnabar.ERel $1 $2 $3 }
       | Expr4 { $1 }
 Expr4 :: { Expr }
-Expr4 : Expr5 AddOp Expr4 { AbsCinnabar.EAdd $1 $2 $3 }
+Expr4 : Expr4 AddOp Expr5 { AbsCinnabar.EAdd $1 $2 $3 }
       | Expr5 { $1 }
 Expr5 :: { Expr }
-Expr5 : Expr6 MulOp Expr5 { AbsCinnabar.EMul $1 $2 $3 }
+Expr5 : Expr5 MulOp Expr6 { AbsCinnabar.EMul $1 $2 $3 }
       | Expr6 { $1 }
 Expr6 :: { Expr }
-Expr6 : Expr7 '^' Expr6 { AbsCinnabar.EPow $1 $3 } | Expr7 { $1 }
+Expr6 : Expr6 '^' Expr7 { AbsCinnabar.EPow $1 $3 } | Expr7 { $1 }
 Expr7 :: { Expr }
 Expr7 : '!' Expr7 { AbsCinnabar.ENot $2 }
       | '-' Expr7 { AbsCinnabar.ENeg $2 }

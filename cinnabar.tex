@@ -23,18 +23,18 @@
 
 \section*{Language features}
 
-Cinnabar is an object-oriented, imperative programming language drawing inspiration from C, Python and JavaScript. 
+Cinnabar is an object-oriented, imperative programming language drawing inspiration from Python and JavaScript. 
 
 \subsection*{Types}
 
 Cinnabar is a dynamically-typed language. Built-in types are:
 \begin{itemize}
-\item \emph{char} -- Unicode characters,
-\item \emph{bool} -- either \emph{true} or \emph{false},
-\item \emph{int} -- arbitrary precision integer,
-\item \emph{list} -- fixed length, mutable list with mixed type elements,
-\item \emph{dictionary} -- mutable, mixed type dictionary,
-\item \emph{object} -- mutable object with fields and methods,
+\item \emph{char} -- Unicode characters;
+\item \emph{bool} -- either \emph{true} or \emph{false};
+\item \emph{int} -- arbitrary precision integer;
+\item \emph{list} -- fixed length, mutable list with mixed type elements, length is contained in the {\tt length} field;
+\item \emph{dictionary} -- mutable, mixed type dictionary, list of keys can be accessed with the {\tt keys} method, list of pairs \emph{[key, value]} can be accessed with the {\tt keys\_values} method;
+\item \emph{object} -- mutable object with fields and methods;
 \item \emph{function} -- anonymous function with side effects.
 \end{itemize} 
 
@@ -45,14 +45,43 @@ Cinnabar has loops, conditional expressions, assignment with list unpacking, run
 
 Cinnabar supports arithmetic, boolean and lambda expressions, python-style \emph{if-then-else}, list and dictionary literals, list comprehension and inheritance expressions.
 
+\subsection*{Strings}
+
+Strings are implemented as lists of characters.
+
+\subsection*{Comparisons}
+
+Comparing values of different types always results in a runtime error.
+\begin{itemize}
+\item Characters and integers support ordering comparisons.
+\item Booleans, lists, dictionaries, objects and functions can only be tested for equality.
+\item Lists are equal iff their lengths are equal, and items on all positions are equal.
+\item Dictionaries are equal iff their key sets are equal, and for each key, assigned values are equal.
+\item Objects and functions are equal only to themselves.
+\end{itemize}
+
 \subsection*{Functions}
 
-There are no named functions in Cinnabar -- only lambdas.
-Calls with missing or excess parameters are considered errors.
+Functions are first class citizens in cinnabar.\\
+There are no named functions -- only anonymous ones. \\
+If no {\tt return} statement is executed, the function returns $0$.\\
+Calls with missing or excess parameters are considered errors.\\
+Arguments are always passed by reference.\\
+Function scopes are implemented as closures -- all changes made to values referenced by either arguments or non-local variables will be persisted.
 
 \subsection*{Objects}
 
-Cinnabar uses prototype inheritance: {\tt new} operator creates a shallow copy and calls the {\tt init} method with given parameters; {\tt extend with} operator creates a shallow copy, then adds or replaces fields and methods with data from a provided dictionary.
+Cinnabar uses prototype inheritance: {\tt new} operator creates a shallow copy and calls the {\tt init} method with given parameters; {\tt extend with} operator creates a shallow copy, then adds or replaces fields and methods with data from a provided dictionary. Only \emph{string} type keys are allowed.\\
+Object methods are internally passed the object as the first parameter.
+
+\subsection*{Built-ins}
+Cinnabar has one built-in object: {\tt object}, with empty {\tt init} method and {\tt to\_str} method that returns the string \emph{[object]}.
+
+Built-in functions:
+\begin{itemize}
+\item {\tt str(v)} -- convert value to string representation. For objects, it calls their {\tt to\_str} method,
+\item {\tt read()} -- read a single character from standard input.
+\end{itemize}
 
 
 \section*{The lexical structure of cinnabar}
@@ -65,12 +94,8 @@ reserved words excluded.
 \subsection*{Literals}
 
 Integer literals \nonterminal{Integer} are sequences of decimal digits.\\
-String literals \nonterminal{String} are sequences of Unicode surrounded with double quotes.\\
-Character literals \nonterminal{Char} are single Unicode symbols surrounded with single quotes.
-
-
-
-
+String literals \nonterminal{String} are sequences of Unicode characters surrounded with double quotes.\\
+Character literals \nonterminal{Char} are single Unicode characters surrounded with single quotes.
 
 \subsection*{Reserved words and symbols}
 
@@ -171,22 +196,22 @@ All other symbols are terminals.\\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr3}} & {\arrow}  &{\nonterminal{Expr4}} {\nonterminal{RelOp}} {\nonterminal{Expr3}}  \\
+{\nonterminal{Expr3}} & {\arrow}  &{\nonterminal{Expr4}} {\nonterminal{RelOp}} {\nonterminal{Expr4}}  \\
  & {\delimit}  &{\nonterminal{Expr4}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr4}} & {\arrow}  &{\nonterminal{Expr5}} {\nonterminal{AddOp}} {\nonterminal{Expr4}}  \\
+{\nonterminal{Expr4}} & {\arrow}  &{\nonterminal{Expr4}} {\nonterminal{AddOp}} {\nonterminal{Expr5}}  \\
  & {\delimit}  &{\nonterminal{Expr5}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr5}} & {\arrow}  &{\nonterminal{Expr6}} {\nonterminal{MulOp}} {\nonterminal{Expr5}}  \\
+{\nonterminal{Expr5}} & {\arrow}  &{\nonterminal{Expr5}} {\nonterminal{MulOp}} {\nonterminal{Expr6}}  \\
  & {\delimit}  &{\nonterminal{Expr6}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr6}} & {\arrow}  &{\nonterminal{Expr7}} {\terminal{{\textasciicircum}}} {\nonterminal{Expr6}}  \\
+{\nonterminal{Expr6}} & {\arrow}  &{\nonterminal{Expr6}} {\terminal{{\textasciicircum}}} {\nonterminal{Expr7}}  \\
  & {\delimit}  &{\nonterminal{Expr7}}  \\
 \end{tabular}\\
 
@@ -260,22 +285,44 @@ All other symbols are terminals.\\
 
 \section*{Example programs}
 \begin{listing}[H]
-\inputminted{C}{good/simple.cb}
+\inputminted{python}{good/simple.cb}
 \caption{A simple example of the syntax}
+\end{listing}
+
+\begin{listing}[H]
+\inputminted{python}{good/lists.cb}
+\caption{List example}
+\end{listing}
+
+\begin{listing}[H]
+\inputminted{python}{good/dict.cb}
+\caption{Dictionary example}
+\end{listing}
+
+\begin{listing}[H]
+\inputminted{python}{good/expr.cb}
+\caption{Expressions example}
+\end{listing}
+
+\begin{listing}[H]
+\inputminted{python}{good/funstack.cb}
+\caption{Lambda example}
+\end{listing}
+
+\begin{listing}[H]
+\inputminted{python}{good/closures.cb}
+\caption{Closures example}
+\end{listing}
+
+\begin{listing}[H]
+\inputminted{python}{good/recurse.cb}
+\caption{Recursion example}
 \label{lst:simple}
 \end{listing}
 
 \begin{listing}[H]
-\inputminted{C}{good/lists.cb}
-\caption{A simple example of the syntax}
-\label{lst:simple}
-\end{listing}
-
-\begin{listing}[H]
-\inputminted{C}{good/expr.cb}
-\caption{A simple example of the syntax}
-\label{lst:simple}
+\inputminted{python}{good/inherit.cb}
+\caption{Inheritance example}
 \end{listing}
 
 \end{document}
-

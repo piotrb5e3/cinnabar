@@ -1,40 +1,25 @@
-a = 1 + 2 * 4 ; // == 9
-
-b = 11 % 5 ; // ==1
-
+assert 1 + 2 * 4 == 9;
+assert 11 % 5 == 1;
 mul = lambda y : lambda x : x * y;
-
 mul7 = mul(7);
+assert mul7(7) + 1 == 50;
 
-c = mul7(7) + 1; // == 50
+assert true != false && (false || true) && true;
 
-if(a != 9 || b <= 0 || mul7(0) > 1) {
-    print "Problem!";
-}
-
-x = true == false || (false && true) || !!!true;
-
-if(x) {
-    print "Problem 2!";
-}
-
-c = 1 if a == 9 else 2;
-
+assert (1 if 3 == 4 else 2) == 2;
+xx = 17;
 d = #{
-    aaa : -1,
-    bbb : 2,
-    ccc : lambda a, b, c : a + (-b) + a,
+    "aaa": -1,
+    "bbb": 2,
+    "ccc": lambda a, b, c : xx - a + -b * c,
 };
 
-if(d.aaa != 1 || d.bbb != 2) {
-    print "Problem 3!";
-}
+xx = 0;
+assert d.ccc(0, 0, 0) == 17;
+
+assert d.aaa == -1 && d["bbb"] == 2;
 
 d.aaa = d.bbb;
-
 d["fff"] = d["aaa"];
-
-if((d["aaa"]) != 2 || d.fff != 2) {
-    print "Problem 4!";
-}
+assert d["aaa"] == 2 && d.fff == 2;
 

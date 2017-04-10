@@ -1,4 +1,4 @@
-push = lambda stack, value: [stack, value];
+push = lambda stack, value: lambda: [stack, value];
 
 pop = lambda stack: stack();
 
@@ -6,11 +6,15 @@ s = 0;
 s = push(s, 11);
 s = push(s, 99);
 s = push(s, 21);
-{s, v} = pop(s);  //v == 21
+{s, v} = pop(s);
+assert v == 21;
 s = push(s, 88);
 s = push(s, 673);
-{s, v} = pop(s);  // v == 673
-{s, v} = pop(s);  // v == 88
-{s, v} = pop(s);  // v == 99
+{s, v} = pop(s);
+assert v == 673;
+{s, v} = pop(s);
+assert v == 88;
+{s, v} = pop(s);
+assert v == 99;
 s = push(s, 11);
 

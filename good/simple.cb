@@ -1,16 +1,13 @@
-min_ = fun (x, y) {
- if( x <= y ) {
-    return x;
- } else {
-    return y;
- }
+/*
+ * This is a multi-line comment
+ */
+mul42 = fun (x) {
+    return x * 42;
 };
 
-a = 103;
-b = 111;
-
-c = min_(a, b);
-d = min_(88, c);
-
-assert c == 103;
-assert d == 88;
+i = 42;
+while(i != mul42(i)){
+    i = i - 1;
+}
+assert i == 0;
+// This is a single line comment
