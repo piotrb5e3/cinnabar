@@ -1,0 +1,5 @@
+print "Hello World!\n";
+
+print 1;
+
+print [1, "ABC", [1, "A", []]];
