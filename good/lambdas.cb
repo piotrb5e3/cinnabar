@@ -1,0 +1,19 @@
+a = lambda x: lambda: x;
+
+max = fun (a, b) {
+  if (a >= b) {
+    return a;
+  } else {
+    return b;
+  }
+};
+
+print a(1)();
+print "\n";
+
+print max(99, 77);
+print "\n";
+
+print max(77, 99);
+print "\n";
+

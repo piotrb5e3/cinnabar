@@ -1,0 +1,8 @@
+while (true) {
+print "This is the song that never ends\n"
+  + "It just goes on and on my friends\n"
+  + "Some people started singing it, not knowing what it was\n"
+  + "And they'll continue singing it forever just because\n";
+}
+
+print "Fin!";

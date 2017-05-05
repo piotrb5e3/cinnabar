@@ -1,5 +1,27 @@
-print "Hello World!\n";
-
+print "Hello" + " World!\n";
+print true;
+print "\n";
+print false;
+print "\n";
 print 1;
-
+print "\n";
 print [1, "ABC", [1, "A", []]];
+print "\n";
+x = 1;
+print x;
+print "\n";
+print x >= 88;
+print "\n";
+print x == 1;
+print "\n";
+print x <= 42;
+print "\n";
+print x != 7;
+print "\n";
+
+print "Hello " * 10 + "World!\n";
+
+print 12 ^ 2;
+print "\n";
+
+print "Hello"[2];

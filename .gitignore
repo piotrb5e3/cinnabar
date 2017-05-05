@@ -1,7 +1,9 @@
 *.bak
 *.swp
 *.o
+*.o-boot
 *.hi
+*.hi-boot
 *.pdf
 _*
 .*
@@ -10,5 +12,5 @@ _*
 *.log
 *.pyg
 *.py
-TestCinnabar
+testParser
 interpreter

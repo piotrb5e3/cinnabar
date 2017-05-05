@@ -1,0 +1,32 @@
+module PState where
+import qualified Data.Map.Strict as M
+
+type Stdout = String
+type Stderr = String
+type WasErr = Bool
+type Result = (Stdout, Stderr, WasErr)
+
+newtype VRef = R Int
+
+incRef :: VRef -> VRef
+
+data Value = I Int | C Char | L [VRef] | B Bool | D (M.Map VRef VRef) | O (M.Map String VRef) | F Int ([VRef] -> PSt -> ECont -> Result)
+
+type SCont = PSt -> Result
+type ECont = VRef -> PSt -> Result
+
+data PSt = PSt { store :: M.Map VRef Value
+               , nextRef :: VRef
+               , vars  :: M.Map String VRef
+               , input :: String
+               }
+
+initialState :: String -> PSt
+setStoreValue :: VRef -> Value -> PSt -> SCont -> Result
+setVarRef :: String -> VRef -> PSt -> SCont -> Result
+alloc :: PSt -> ECont -> Result
+writeStdout :: String -> PSt -> SCont -> Result
+writeStderr :: String -> PSt -> SCont -> Result
+readChar :: PSt -> ECont -> Result
+showError :: String -> Result
+allocAndSet :: Value -> PSt -> ECont -> Result

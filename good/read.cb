@@ -1,0 +1,9 @@
+print "Type some stuff. Type 'X' to exit\n";
+
+c = ' ';
+s = "You said ?\n";
+while (c != 'X') {
+  c = read();
+  s[9] = c;
+  print s;
+}
