@@ -16,12 +16,14 @@ z = l + ll;
 //assert ll.length == 10; //Not implemented yet
 
 l0 = [x * 10 + y for {x, y} in [[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]];
-print l0;
+assert l0[4] == 12;
+assert l0[1] == 2;
 
 assert [1, 2, 3] * 3 == [1, 2, 3, 1, 2, 3, 1, 2, 3];
 assert [1, 2, 3] != [1, 2, 4];
 assert [1, 2, 3] != [99, 2, 3];
 assert [1, 2, 3] != [1, 2, 3, 4];
 assert [1, 2, 3, 4] != [1, 2, 3];
-print "\nFin\n";
+
+print "OK\n";
 

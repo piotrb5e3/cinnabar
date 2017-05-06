@@ -1,7 +1,6 @@
 /*
  * This is a multi-line comment
  */
-print "Hello World!\n";
 mul42 = fun (x) {
     return x * 42;
 };
@@ -12,4 +11,4 @@ while(i != mul42(i)){
 }
 assert i == 0;
 // This is a single line comment
-
+print "OK\n";

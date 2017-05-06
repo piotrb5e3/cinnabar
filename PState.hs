@@ -18,6 +18,7 @@ data Value = I Int | C Char | L [VRef] | B Bool | D (M.Map VRef VRef) | O (M.Map
 
 type SCont = PSt -> Result
 type ECont = VRef -> PSt -> Result
+type DECont = VRef -> VRef -> PSt -> Result
 
 data PSt = PSt { store :: M.Map VRef Value
                , nextRef :: VRef
@@ -64,6 +65,7 @@ allocAndSet val st cont = alloc st c0 where
 ref2val :: PSt -> VRef -> Value
 ref2val st ref = store st M.! ref
 
+---- Builtins ----
 
 strFun :: Value
 strFun = F 1 c0 where

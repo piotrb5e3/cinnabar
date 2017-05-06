@@ -6,7 +6,10 @@ assert mul7(7) + 1 == 50;
 
 assert true != false && (false || true) && true;
 
-assert (1 if 3 == 4 else 2) == 2;
+assert (1 if (3 == 4) else 2) == 2;
+
+/*
+// Not implemented yet
 xx = 17;
 d = #{
     "aaa": -1,
@@ -22,4 +25,5 @@ assert d.aaa == -1 && d["bbb"] == 2;
 d.aaa = d.bbb;
 d["fff"] = d["aaa"];
 assert d["aaa"] == 2 && d.fff == 2;
-
+*/
+print "OK\n";

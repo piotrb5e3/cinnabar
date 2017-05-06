@@ -17,4 +17,4 @@ assert v == 88;
 {s, v} = pop(s);
 assert v == 99;
 s = push(s, 11);
-print "Fin!\n";
+print "OK\n";

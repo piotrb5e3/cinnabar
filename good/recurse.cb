@@ -1,20 +1,21 @@
 fib = fun(n) {
     h = fun (f, n) {
-        if(n <= 0) {
+        if (n <= 0) {
             return 0;
         } else {
             if (n == 1) {
                 return 1;
             } else {
-                return f(n-1) + f(n-2);
+                return f(f, n-1) + f(f, n-2);
             }
         }
     };
     return h(h, n);
 };
-
 assert fib(1) == 1;
 assert fib(2) == 1;
 assert fib(3) == 2;
 assert fib(4) == 3;
-assert fib(42) == 267914296;
+assert fib(10) == 55;
+
+print "OK\n";

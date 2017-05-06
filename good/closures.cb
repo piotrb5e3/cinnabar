@@ -17,3 +17,4 @@ assert l == [7, 2, 3];
 assert z == [4, 1, 1];
 assert vv == [9, 9, 9];
 
+print "OK\n"

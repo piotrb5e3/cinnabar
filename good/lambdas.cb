@@ -8,12 +8,11 @@ max = fun (a, b) {
   }
 };
 
-print a(1)();
-print "\n";
+assert a(1)() == 1;
 
-print max(99, 77);
-print "\n";
+assert max(99, 77) == 99;
 
-print max(77, 99);
-print "\n";
+assert max(77, 99) == 99;
+
+print "OK\n";
 

@@ -25,3 +25,6 @@ print 12 ^ 2;
 print "\n";
 
 print "Hello"[2];
+print "\n";
+print [];
+print "\nOK\n";

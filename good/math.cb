@@ -1,0 +1,18 @@
+x = 1 + 2;
+assert x == 3;
+
+assert 1 + 2 * 3 == 7;
+assert 2 ^ 10 == 1024;
+assert 1 + 1 - 1 + 1 - 1 + 1 - 1 == 1;
+assert 10 / 5 == 2;
+assert 21 / 10 == 2;
+assert 29 / 10 == 2;
+assert 77 % 2 == 1;
+assert 144 % 12 == 0;
+assert (1 + 1) - (1 + 1) - (1 + 1) - 1 == -3;
+
+x = 77;
+assert x + -x == 0;
+
+assert -34 ^ 3 / 34 ^ 3 == -1;
+print "OK\n";
