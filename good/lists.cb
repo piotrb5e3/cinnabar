@@ -8,10 +8,20 @@ assert l0 == 123;
 
 l[0] = l[0] + l[1] + l[l[1]];
 assert l[0] == 128;
+
 ll = [i ^ i ^ i for i in l];
 assert ll[1] == 16;
 
 z = l + ll;
-assert ll.length == 10;
+//assert ll.length == 10; //Not implemented yet
+
+l0 = [x * 10 + y for {x, y} in [[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]];
+print l0;
 
 assert [1, 2, 3] * 3 == [1, 2, 3, 1, 2, 3, 1, 2, 3];
+assert [1, 2, 3] != [1, 2, 4];
+assert [1, 2, 3] != [99, 2, 3];
+assert [1, 2, 3] != [1, 2, 3, 4];
+assert [1, 2, 3, 4] != [1, 2, 3];
+print "\nFin\n";
+

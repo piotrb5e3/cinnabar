@@ -1,7 +1,9 @@
 module Expression where
+import Control.Monad (foldM)
 import Data.List (intercalate)
 import qualified Data.Map.Strict as M
 
+import {-# SOURCE #-} Statement
 import AbsCinnabar
 import PState
 import Block
@@ -36,13 +38,10 @@ evalExpr (EAnd e0 e1) st cont = evalExpr e0 st c0 where
       c2 ref2 st4 = truthHelper ref2 st4 (cont ref2) (cont ref2) 
 
 evalExpr (ERel e0 op e1) st cont = evalExpr e0 st c0 where
-  c0 ref st2 = evalExpr e1 st2 (crel ref)
-  crel ref ref2 st4 = case (store st4 M.! ref, op, store st4 M.! ref2) of
-    (I i1, _, I i2) -> allocAndSet (B (relOpFun op i1 i2)) st4 cont
-    (C c1, _, C c2) -> allocAndSet (B (relOpFun op c1 c2)) st4 cont
-    (B b1, Eq, B b2) -> allocAndSet (B (b1 == b2)) st4 cont
-    (B b1, Ne, B b2) -> allocAndSet (B (b1 /= b2)) st4 cont
-    _ -> showError "Cannot compare"
+  c0 ref st2 = evalExpr e1 st2 c1 where
+    c1 ref2 st3 = case compareValues ref ref2 st3 op of
+      Just b -> allocAndSet (B b) st3 cont
+      Nothing -> showError "Cannot compare"
 
 evalExpr (EAdd e0 op e1) st cont = evalExpr e0 st c0 where
   c0 ref st2 = evalExpr e1 st2 (cadd ref)
@@ -130,7 +129,16 @@ evalExpr (EList els) st cont = alloc st c0 where
       bindCont expr cont1 st4 = evalExpr expr st4 bindAppend where
         bindAppend ref2 st5 = listAppend ref ref2 st5 cont1
 
-evalExpr (EListComp e lv eit) st cont = showError "Not implemented yet"
+evalExpr (EListComp e lv eit) st cont = evalExpr eit st c0 where
+  c0 ref st2 = case store st2 M.! ref of
+    L itRefs -> allocAndSet (L []) st2 c1 where
+      c1 lRef st3 = foldr procElem cFin itRefs st3 where
+        procElem ref2 cont2 st4 = assignRefToLVal lv ref2 st4 c2 where
+          c2 st5 = evalExpr e st5 c3 where
+            c3 ref3 st6 =  listAppend lRef ref3 st6 cont2
+        cFin st7 = cont lRef finSt where
+          finSt = PSt (store st7) (nextRef st7) (vars st3) (input st7)
+    _ -> showError "Only lists can be iterated over in list comprehension"
 
 evalExpr (EDict ldm) st cont = showError "Not implemented yet"
 
@@ -198,6 +206,27 @@ isCharRef :: PSt -> VRef -> Bool
 isCharRef st ref = case store st M.! ref of
   C _ -> True
   _   -> False
+
+compareValues :: VRef -> VRef -> PSt -> RelOp -> Maybe Bool
+compareValues ref1 ref2 st op = case (ref2val st ref1, op, ref2val st ref2) of
+    (I i1, _, I i2) -> return $ relOpFun op i1 i2
+    (C c1, _, C c2) -> return $ relOpFun op c1 c2
+    (B b1, Eq, B b2) -> return $ b1 == b2
+    (B b1, Ne, B b2) -> return $ b1 /= b2
+    (L l1, Eq, L l2) -> listEqCompare l1 l2 st
+    (L l1, Ne, L l2) -> do
+      res <- listEqCompare l1 l2 st
+      return $ not res
+    (D d1, _, D d2) -> Nothing
+    (O o1, _, O o2) -> Nothing
+    _ -> Nothing
+
+listEqCompare :: [VRef] -> [VRef] -> PSt -> Maybe Bool
+listEqCompare l1 l2 st = if length l1 /= length l2
+  then return False
+  else do
+    compRes <- mapM (\(l1, l2) -> compareValues l1 l2 st Eq) $ zip l1 l2
+    return $ and compRes
 
 relOpFun :: (Eq a, Ord a) => RelOp -> (a -> a -> Bool)
 relOpFun op = case op of

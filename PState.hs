@@ -61,6 +61,9 @@ allocAndSet :: Value -> PSt -> ECont -> Result
 allocAndSet val st cont = alloc st c0 where
   c0 ref st2 = setStoreValue ref val st2 (cont ref)
 
+ref2val :: PSt -> VRef -> Value
+ref2val st ref = store st M.! ref
+
 
 strFun :: Value
 strFun = F 1 c0 where
