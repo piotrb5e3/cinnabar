@@ -27,19 +27,20 @@ Cinnabar is an object-oriented, imperative programming language drawing inspirat
 
 \subsection*{Types}
 
-Cinnabar is a dynamically-typed language. Built-in types are:
+Cinnabar is a dynamically-typed language. Values are always accessed by reference. Built-in types are:
 \begin{itemize}
-\item \emph{char} -- Unicode characters;
-\item \emph{bool} -- either \emph{true} or \emph{false};
-\item \emph{int} -- arbitrary precision integer;
-\item \emph{list} -- fixed length, mutable list with mixed type elements, length is contained in the {\tt length} field;
-\item \emph{dictionary} -- mutable, mixed type dictionary, list of keys can be accessed with the {\tt keys} method, list of pairs \emph{[key, value]} can be accessed with the {\tt keys\_values} method;
+\item \emph{char} -- immutable Unicode character;
+\item \emph{bool} -- immutable, either \emph{true} or \emph{false};
+\item \emph{int} -- immutable, fixed-precision integer with at least the range
+$\left[ -2^{29}, 2^{29}-1 \right]$;
+\item \emph{list} -- fixed length, mutable list with mixed type elements, length is accessible via the {\tt length} field;
+\item \emph{dictionary} -- mutable, mixed type dictionary, list of keys can be accessed via the {\tt keys} field, list of pairs \emph{[key, value]} can be accessed via the {\tt keys\_values} field;
 \item \emph{object} -- mutable object with fields and methods;
-\item \emph{function} -- anonymous function with side effects.
+\item \emph{function} -- immutable, anonymous function with side effects.
 \end{itemize} 
 
 \subsection*{Statements}
-Cinnabar has loops, conditional expressions, assignment with list unpacking, runtime assertions. It also supports writing to standard output via the {\tt print} statement.
+Cinnabar has loops, conditional expressions, assignment with list unpacking, run-time assertions. It also supports writing to standard output via the {\tt print} statement.
 
 \subsection*{Expressions}
 
@@ -67,7 +68,7 @@ There are no named functions -- only anonymous ones. \\
 If no {\tt return} statement is executed, the function returns $0$.\\
 Calls with missing or excess parameters are considered errors.\\
 Arguments are always passed by reference.\\
-Function scopes are implemented as closures -- all changes made to values referenced by either arguments or non-local variables will be persisted.
+Functions are implemented as closures -- they persist the variable-to-reference mapping form the time of creation. Changes made to values referenced by either arguments or non-local variables will be persisted.
 
 \subsection*{Objects}
 

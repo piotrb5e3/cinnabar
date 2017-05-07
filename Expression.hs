@@ -86,7 +86,18 @@ evalExpr (ECall e el) st cont = evalExpr e st c0 where
           _ -> showError "Internal error (ECall)"
     _ -> showError "Called a non-callable value"
 
-evalExpr (EMember e mid) st cont = showError "Not implemented yet"
+evalExpr (EMember e (Ident mid)) st cont = evalExpr e st c0 where
+  c0 ref st2 = case ref2val st2 ref of
+    L refs -> if mid == "length"
+      then allocAndSet (I $ length refs) st2 cont
+      else showError ("List value has no member " ++ mid)
+    D m -> case mid of
+      "keys" -> allocAndSet (L $ M.keys m) st2 cont
+      "keys_values" -> allocAndSet (L []) st c0 where
+        c0 ref = M.foldrWithKey procElem (cont ref) m where
+          procElem k v cont1 st2 = allocAndSet (L [k, v]) st2 appendPair where
+            appendPair pRef st3 = listAppend ref pRef st3 cont1
+    _ -> showError ("Value has no member " ++ mid)
 
 evalExpr (EAt e0 e1) st cont = eval2Expr e0 e1 st c0 where
   c0 ref ref2 st2 = case (ref2val st2 ref, ref2val st2 ref2) of
@@ -244,16 +255,33 @@ compareValues ref1 ref2 st op = case (ref2val st ref1, op, ref2val st ref2) of
     (L l1, Ne, L l2) -> do
       res <- listEqCompare l1 l2 st
       return $ not res
-    (D d1, _, D d2) -> Nothing
-    (O o1, _, O o2) -> Nothing
+    (D d1, Eq, D d2) -> dictEqCompare d1 d2 st
+    (D d1, Ne, D d2) -> do
+      res <- dictEqCompare d1 d2 st
+      return $ not res
+    (O _, Eq, O _) -> return $ ref1 == ref2
+    (O _, Ne, O _) -> return $ ref1 /= ref2
+    (F _ _, Eq, F _ _) -> return $ ref1 == ref2
+    (F _ _, Ne, F _ _) -> return $ ref1 /= ref2
     _ -> Nothing
 
 listEqCompare :: [VRef] -> [VRef] -> PSt -> Maybe Bool
 listEqCompare l1 l2 st = if length l1 /= length l2
   then return False
   else do
-    compRes <- mapM (\(l1, l2) -> compareValues l1 l2 st Eq) $ zip l1 l2
+    compRes <- mapM (\(r1, r2) -> compareValues r1 r2 st Eq) $ zip l1 l2
     return $ and compRes
+
+dictEqCompare :: M.Map VRef VRef -> M.Map VRef VRef -> PSt -> Maybe Bool
+dictEqCompare m1 m2 st = if M.size m1 /= M.size m2
+  then return False
+  else do
+    let k1 = M.keys m1
+    case mapM (\r -> dictKeyLookup m2 r st) k1 of
+      Nothing -> return False
+      Just k2 -> do
+        compRes <- mapM (\(r1, r2) -> compareValues (m1 M.! r1) (m2 M.! r2) st Eq) $ zip k1 k2
+        return $ and compRes
 
 relOpFun :: (Eq a, Ord a) => RelOp -> (a -> a -> Bool)
 relOpFun op = case op of
