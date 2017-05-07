@@ -56,7 +56,7 @@ assignRefToLVal lv ref st cont = case lv of
               (lrf, _:lrt) = splitAt i lrefs
           (L _, _) -> showError "Lists are only integer-subscriptable"
           (O _, _) -> showError "Not implemented yet"
-          (D _, _) -> showError "Not implemented yet"
+          (D m, _) -> dictSet ref1 ref2 ref st2 cont
           _ -> showError "Only list, dictionary and object values can be subscripted"
     AMember e mid -> showError "Not implemented yet"
 

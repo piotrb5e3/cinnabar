@@ -1,6 +1,7 @@
 module Expression where
 import Control.Monad (foldM)
 import Data.List (intercalate)
+import Data.Maybe (fromMaybe)
 import qualified Data.Map.Strict as M
 
 import {-# SOURCE #-} Statement
@@ -93,7 +94,9 @@ evalExpr (EAt e0 e1) st cont = eval2Expr e0 e1 st c0 where
       then cont (l !! i) st2
       else showError $ "List index out of range: " ++ show i
     (O m, _) -> showError "Not implemented yet"
-    (D m, _) -> showError "Not implemented yet"
+    (D m, _) -> case dictKeyLookup m ref2 st2 of
+      Just kRef -> cont (m M.! kRef) st2
+      Nothing -> showError "Key does not exist in dict"
     (L _, _) -> showError "Bad list subscript type"
     _ -> showError "Type cannot be subscripted"
 
@@ -131,7 +134,10 @@ evalExpr (EListComp e lv eit) st cont = evalExpr eit st c0 where
           finSt = PSt (store st7) (nextRef st7) (vars st3) (input st7)
     _ -> showError "Only lists can be iterated over in list comprehension"
 
-evalExpr (EDict ldm) st cont = showError "Not implemented yet"
+evalExpr (EDict ldm) st cont = allocAndSet (D M.empty) st c0 where
+  c0 dRef = foldr procElem (cont dRef) ldm where
+    procElem (EDictMap e0 e1) cont2 st3 = eval2Expr e0 e1 st3 c1 where
+      c1 ref1 ref2 st4 = dictSet dRef ref1 ref2 st4 cont2
 
 eval2Expr :: Expr -> Expr -> PSt -> DECont -> Result
 eval2Expr e0 e1 st cont = evalExpr e0 st c0 where
@@ -157,11 +163,22 @@ toStrHelper quoteStr ref st cont = case ref2val st ref of
               else allocAndSet (L []) st c0 where
       c0 ref = foldr bindCont c1 els where
         c1 st6 = case unCharListList st6 ref of
-          Nothing -> showError "Internal error (to StrHelper 2)"
+          Nothing -> showError "Internal error (toStrHelper 2)"
           Just str -> charList str st6 cont
         bindCont elref cont1 st4 = toStrHelper True elref st4 bindAppend where
           bindAppend ref2 st5 = listAppend ref ref2 st5 cont1
   B b -> charList (show b) st cont
+  D m -> allocAndSet (L []) st c0 where
+    c0 ref = M.foldrWithKey procElem cFin m where
+      cFin st6 = case unCharListDict st6 ref of
+        Just str -> charList str st6 cont
+      procElem k v cont1 st2 = toStrHelper True k st2 procVal where
+        procVal sKRef st3 = toStrHelper True v st3 mergeKV where
+          mergeKV sVRef st4 = case (unCharList st4 sKRef, unCharList st4 sVRef) of
+            (Just sk, Just sv) -> charList (sk ++ ": " ++ sv) st4 appendKV where
+              appendKV sRef st5 = listAppend ref sRef st5 cont1
+  F _ _ -> charList "<lambda>" st cont
+  _ -> showError "Not implemented yet"
 
 charList :: String -> PSt -> ECont -> Result
 charList str st cont = allocAndSet (L []) st c0 where 
@@ -178,11 +195,28 @@ listAppend lref aref st cont = case ref2val st lref of
   L elems -> setStoreValue lref (L $ elems ++ [aref]) st cont
   _       -> showError "Internal error (listAppend)"
 
+dictKeyLookup :: M.Map VRef VRef -> VRef -> PSt -> Maybe VRef
+dictKeyLookup m ref st = first compFun $ M.keys m where
+  compFun ref2 = fromMaybe False $ compareValues ref ref2 st Eq
+
+dictSet :: VRef -> VRef -> VRef -> PSt -> SCont -> Result
+dictSet dRef ref0 ref1 st cont = case ref2val st dRef of
+  D m -> setStoreValue dRef (D $ M.insert kRef ref1 m) st cont where
+    kRef = fromMaybe ref0 $ dictKeyLookup m ref0 st
+  _ -> showError "Internal error (dictSet)"
+
 unCharListList :: PSt -> VRef -> Maybe String
 unCharListList st ref = case store st M.! ref of
   L els -> do
     sl <- mapM (unCharList st) els
     return $ "[" ++ intercalate ", " sl ++ "]"
+  _ -> Nothing
+
+unCharListDict :: PSt -> VRef -> Maybe String
+unCharListDict st ref = case store st M.! ref of
+  L els -> do
+    sl <- mapM (unCharList st) els
+    return $ "#{" ++ intercalate ", " sl ++ "}"
   _ -> Nothing
 
 unCharList ::  PSt -> VRef -> Maybe String
@@ -238,3 +272,8 @@ mulOpFun op = case op of
 
 idToStr :: Ident -> String
 idToStr (Ident str) = str
+
+first :: (a -> Bool) -> [a] -> Maybe a
+first f [] = Nothing
+first f (l:ls) = if f l then Just l else first f ls
+
