@@ -45,7 +45,7 @@ data Expr
     | EMember Expr Ident
     | EAt Expr Expr
     | EExtend Expr Expr
-    | ENew Expr [Expr]
+    | ENew Expr
     | EChar Char
     | EString String
     | ELitInt Integer

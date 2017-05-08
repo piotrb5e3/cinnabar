@@ -44,7 +44,7 @@ ECall.     Expr8 ::= Expr8 "(" [Expr] ")" ;
 EMember.   Expr8 ::= Expr8 "." Ident ;
 EAt.       Expr8 ::= Expr8 "[" Expr "]" ;
 EExtend.   Expr9 ::= "extend" Expr "with" Expr9 ;
-ENew.      Expr9 ::= "new" Expr9 "(" [Expr] ")" ;
+ENew.      Expr9 ::= "new" Expr9 ;
 
 EChar.     Expr10 ::= Char ;
 EString.   Expr10 ::= String ;

@@ -137,14 +137,12 @@ evalExpr (EExtend e0 e1) cont = eval2Expr e0 e1 c0 where
     (O m, _) -> showError "Extending with a non-dictionary value"
     _ -> showError "Extending a non-object value"
 
-evalExpr (ENew e el) cont = eval2Expr e (EList el) c0 where
-  c0 ref ref2 st = case ref2val st ref of
+evalExpr (ENew e) cont = evalExpr e c0 where
+  c0 ref st = case ref2val st ref of
     O m -> case ref2val st $ m M.! "init" of
-      F argc fCont -> if argc - 1 /= length el
-        then showError ("Wrong number of parameters. Expected: " ++ show (argc - 1) ++ " was: " ++ show (length el))
-        else case ref2val st ref2 of
-          L refs -> allocAndSet (O m) c2 st where
-            c2 nRef = fCont (nRef:refs) (const (cont nRef))
+      F argc fCont -> allocAndSet (F (argc - 1) fCont2) cont st where
+        fCont2 refs cont2 = allocAndSet (O m) c1 where
+         c1 nRef = fCont (nRef:refs) (const (cont2 nRef))
       _ -> showError "Object's member \"init\" in not a function"
     _ -> showError "Calling new with a non-object value"
 

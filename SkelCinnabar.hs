@@ -51,7 +51,7 @@ transExpr x = case x of
   EMember expr ident -> failure x
   EAt expr1 expr2 -> failure x
   EExtend expr1 expr2 -> failure x
-  ENew expr exprs -> failure x
+  ENew expr -> failure x
   EChar char -> failure x
   EString string -> failure x
   ELitInt integer -> failure x

@@ -127,7 +127,7 @@ Expr8 : Expr8 '(' ListExpr ')' { AbsCinnabar.ECall $1 $3 }
       | Expr9 { $1 }
 Expr9 :: { Expr }
 Expr9 : 'extend' Expr 'with' Expr9 { AbsCinnabar.EExtend $2 $4 }
-      | 'new' Expr9 '(' ListExpr ')' { AbsCinnabar.ENew $2 $4 }
+      | 'new' Expr9 { AbsCinnabar.ENew $2 }
       | Expr10 { $1 }
 Expr10 :: { Expr }
 Expr10 : Char { AbsCinnabar.EChar $1 }
