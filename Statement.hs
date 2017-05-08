@@ -28,9 +28,8 @@ runStatement (SReturn e) st cont retCont = evalExpr e st retCont
 
 runStatement (SPrint e) st cont retCont = evalExpr e st c0 where 
     c0 ref st2 = toStrHelper False ref st2 c1 where
-        c1 ref2 st3 = case unCharList st3 ref2 of
+        c1 ref2 st3 = case unCharListRef st3 ref2 of
           Just str -> writeStdout str st3 cont
-          Nothing -> showError "Internal error (runStatement SPrint)"
 
 runStatement (SAssert e) st cont retCont = evalExpr e st c0 where
   c0 ref st2 = truthHelper ref st2 cont assertErr
@@ -55,10 +54,17 @@ assignRefToLVal lv ref st cont = case lv of
               lrefs2 = lrf ++ ref:lrt
               (lrf, _:lrt) = splitAt i lrefs
           (L _, _) -> showError "Lists are only integer-subscriptable"
-          (O _, _) -> showError "Not implemented yet"
+          (O _, L []) -> showError "Object member names must be non-empty strings"
+          (O m, L lr) -> case unCharList st2 lr of
+            Just str -> objectSet ref1 str ref st2 cont
+            Nothing -> showError "Object member names must be non-empty strings"
+          (O _, _) -> showError "Object member names must be non-empty strings"
           (D m, _) -> dictSet ref1 ref2 ref st2 cont
           _ -> showError "Only list, dictionary and object values can be subscripted"
-    AMember e mid -> showError "Not implemented yet"
+    AMember e (Ident mid) -> evalExpr e st c0 where
+      c0 ref2 st2 = case ref2val st2 ref2 of
+        O m -> objectSet ref2 mid ref st2 cont
+        _ -> showError ("Cannot assign to value's member named " ++ mid)
 
     AVar (Ident str) -> setVarRef str ref st cont
 

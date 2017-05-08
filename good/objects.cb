@@ -1,0 +1,38 @@
+assert str(object) == "[object]";
+
+x = new object();
+x.init = fun(self, z) {
+  self.z = z;
+};
+
+y = new x(42);
+
+x["to_str"] = lambda self: "I am X!";
+
+assert str(x) == "I am X!";
+
+assert y["z"] == 42;
+
+truck_prototype = extend x with #{
+  "init": fun(self, make) {
+    self.make = make;
+    self.wheels = 16;
+  },
+  "wheel_count": lambda self: self.wheels,
+  "wheels": 0,
+  "make": "",
+  "to_str": lambda self: "Beep! Beep! I'm a truck!",
+};
+
+assert truck_prototype.wheel_count() == 0;
+
+volvo = new truck_prototype("Volvo");
+
+scania = new truck_prototype("Scania");
+
+assert volvo.wheel_count() == 16;
+assert volvo.make == "Volvo";
+assert str(volvo) == "Beep! Beep! I'm a truck!";
+
+assert scania.make == "Scania";
+print "OK\n";

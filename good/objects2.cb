@@ -1,0 +1,11 @@
+x = extend object with #{"x": 1};
+y = new x();
+z = new x();
+x.x = 77;
+assert y.x == 1;
+z.x = 99;
+assert y.x == 1;
+assert x.x == 77;
+assert z.x == 99;
+
+print "OK\n";

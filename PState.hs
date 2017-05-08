@@ -27,9 +27,19 @@ data PSt = PSt { store :: M.Map VRef Value
                }
 
 initialState :: String -> PSt
-initialState = PSt initStore  initRef initVars where
-  initStore = M.fromList [(R (-1), strFun), (R (-2), readFun)]
-  initVars = M.fromList [("str", R (-1)), ("read", R (-2))]
+initialState = PSt initStore initRef initVars where
+  initStore = M.fromList [
+    (R (-1), strFun),
+    (R (-2), readFun),
+    (R (-3), oInit),
+    (R (-4), oToStr),
+    (R (-5), O (M.fromList [
+      ("init", R (-3)),
+      ("to_str", R(-4))]))]
+  initVars = M.fromList [
+    ("str", R (-1)),
+    ("read", R (-2)),
+    ("object", R(-5))]
 
 setStoreValue :: VRef -> Value -> PSt -> SCont -> Result
 setStoreValue ref v st cont = cont (PSt (M.insert ref v $ store st) (nextRef st) (vars st) (input st))
@@ -74,3 +84,11 @@ strFun = F 1 c0 where
 readFun :: Value
 readFun = F 0 c0 where
   c0 _ = readChar
+
+oInit :: Value
+oInit = F 1 c0 where
+  c0 _ = allocAndSet (I 0)
+
+oToStr :: Value
+oToStr = F 1 c0 where
+  c0 _ = charList "[object]"

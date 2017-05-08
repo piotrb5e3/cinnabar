@@ -9,4 +9,5 @@ import Block
 evalExpr :: Expr -> PSt -> ECont -> Result
 truthHelper :: VRef -> PSt -> SCont -> SCont -> Result
 toStrHelper :: Bool -> VRef -> PSt -> ECont -> Result
+charList :: String -> PSt -> ECont -> Result
 

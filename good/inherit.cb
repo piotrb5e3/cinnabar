@@ -13,12 +13,10 @@ barfoo = extend foo with #{
     }
 };
 
-
 barfoo2 = new barfoo(1, 3);
 assert barfoo2.bar == 42;
 assert barfoo2.boofar == 3;
 assert barfoo2.barfoo(lambda x: x.bar) == 42;
-
 
 fooz = new foo(99, 12);
 assert fooz.boofar == 1188;
@@ -31,4 +29,4 @@ foox = new fooz(12, 11);
 assert foox.bar == 1337;
 assert foox.foobar(1) == 1337;
 
-
+print "OK\n";

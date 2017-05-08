@@ -83,7 +83,6 @@ evalExpr (ECall e el) st cont = evalExpr e st c0 where
       else evalExpr (EList el) st2 c1 where
         c1 ref2 st3 = case ref2val st3 ref2 of
           L rl -> funC rl st3 cont
-          _ -> showError "Internal error (ECall)"
     _ -> showError "Called a non-callable value"
 
 evalExpr (EMember e (Ident mid)) st cont = evalExpr e st c0 where
@@ -97,6 +96,12 @@ evalExpr (EMember e (Ident mid)) st cont = evalExpr e st c0 where
         c0 ref = M.foldrWithKey procElem (cont ref) m where
           procElem k v cont1 st2 = allocAndSet (L [k, v]) st2 appendPair where
             appendPair pRef st3 = listAppend ref pRef st3 cont1
+      _ -> showError ("Dictionary value has no member " ++ mid)
+    O m -> case M.lookup mid m of
+      Just ref2 -> case ref2val st2 ref2 of
+        F i cont2 -> allocAndSet (F (i-1) (\lrefs -> cont2 (ref:lrefs))) st2 cont
+        _ -> cont ref2 st2
+      Nothing -> showError ("Object has no member " ++ mid)
     _ -> showError ("Value has no member " ++ mid)
 
 evalExpr (EAt e0 e1) st cont = eval2Expr e0 e1 st c0 where
@@ -104,16 +109,40 @@ evalExpr (EAt e0 e1) st cont = eval2Expr e0 e1 st c0 where
     (L l, I i) -> if i >= 0 && i < length l
       then cont (l !! i) st2
       else showError $ "List index out of range: " ++ show i
-    (O m, _) -> showError "Not implemented yet"
+    (O m, L []) -> showError "Object member names must be non-empty strings"
+    (O m, L lr) -> case unCharList st2 lr of
+            Nothing -> showError "Object member names must be non-empty strings"
+            Just str -> case M.lookup str m of
+              Nothing -> showError ("Object has no member " ++ str)
+              Just ref3 -> case ref2val st2 ref3 of
+                F i cont2 -> allocAndSet (F (i-1) (\lrefs -> cont2 (ref:lrefs))) st2 cont
+                _ -> cont ref3 st2
+    (O m, _) -> showError "Object member names must be non-empty strings"
     (D m, _) -> case dictKeyLookup m ref2 st2 of
       Just kRef -> cont (m M.! kRef) st2
       Nothing -> showError "Key does not exist in dict"
     (L _, _) -> showError "Bad list subscript type"
     _ -> showError "Type cannot be subscripted"
 
-evalExpr (EExtend e0 e1) st cont = showError "Not implemented yet"
+evalExpr (EExtend e0 e1) st cont = eval2Expr e0 e1 st c0 where
+  c0 ref1 ref2 st2 = case (ref2val st2 ref1, ref2val st2 ref2) of
+    (O m, D m2) -> case extendMerge m m2 st2 of
+      Nothing -> showError "Extending with a dictionary containing a non-string key"
+      Just m3 -> allocAndSet (O m3) st2 cont
+    (O m, _) -> showError "Extending with a non-dictionary value"
+    _ -> showError "Extending a non-object value"
 
-evalExpr (ENew e el) st cont = showError "Not implemented yet"
+evalExpr (ENew e el) st cont = evalExpr e st c0 where
+  c0 ref st2 = evalExpr (EList el) st2 c1 where
+    c1 ref2 st3 = case ref2val st3 ref of
+      O m -> case ref2val st3 $ m M.! "init" of
+        F argc fCont -> if argc /= 1 + length el
+          then showError ("Wrong number of parameters. Expected: " ++ show (argc - 1) ++ " was: " ++ show (length el))
+          else case ref2val st3 ref2 of
+            L refs -> allocAndSet (O m) st3 c2 where
+              c2 nRef st4 = fCont (nRef:refs) st4 (const (cont nRef))
+        _ -> showError "Object's member \"init\" in not a function"
+      _ -> showError "Calling new with a non-object value"
 
 evalExpr (EChar c) st cont = charVal c st cont
 
@@ -167,14 +196,12 @@ toStrHelper quoteStr ref st cont = case ref2val st ref of
   L [] -> charList "[]" st cont
   L els -> if all (isCharRef st) els
               then if quoteStr
-                then case unCharList st ref of
-                  Nothing -> showError "Internal error (toStrHelper)"
+                then case unCharList st els of
                   Just str -> charList ("\"" ++ str ++ "\"") st cont
                 else cont ref st
               else allocAndSet (L []) st c0 where
       c0 ref = foldr bindCont c1 els where
         c1 st6 = case unCharListList st6 ref of
-          Nothing -> showError "Internal error (toStrHelper 2)"
           Just str -> charList str st6 cont
         bindCont elref cont1 st4 = toStrHelper True elref st4 bindAppend where
           bindAppend ref2 st5 = listAppend ref ref2 st5 cont1
@@ -185,11 +212,15 @@ toStrHelper quoteStr ref st cont = case ref2val st ref of
         Just str -> charList str st6 cont
       procElem k v cont1 st2 = toStrHelper True k st2 procVal where
         procVal sKRef st3 = toStrHelper True v st3 mergeKV where
-          mergeKV sVRef st4 = case (unCharList st4 sKRef, unCharList st4 sVRef) of
+          mergeKV sVRef st4 = case (unCharListRef st4 sKRef, unCharListRef st4 sVRef) of
             (Just sk, Just sv) -> charList (sk ++ ": " ++ sv) st4 appendKV where
               appendKV sRef st5 = listAppend ref sRef st5 cont1
   F _ _ -> charList "<lambda>" st cont
-  _ -> showError "Not implemented yet"
+  O m -> case ref2val st $ m M.! "to_str" of
+    F 1 fCont -> fCont [ref] st c0 where
+      c0 ref2 st2 = toStrHelper False ref2 st2 cont
+    F i _ -> showError ("Object's to_str method has a wrong number of parameters. Expected: 1, found: " ++ show i)
+    _ -> showError "Object's to_str member is not a function"
 
 charList :: String -> PSt -> ECont -> Result
 charList str st cont = allocAndSet (L []) st c0 where 
@@ -204,7 +235,6 @@ charVal c = allocAndSet (C c)
 listAppend :: VRef -> VRef -> PSt -> SCont -> Result
 listAppend lref aref st cont = case ref2val st lref of
   L elems -> setStoreValue lref (L $ elems ++ [aref]) st cont
-  _       -> showError "Internal error (listAppend)"
 
 dictKeyLookup :: M.Map VRef VRef -> VRef -> PSt -> Maybe VRef
 dictKeyLookup m ref st = first compFun $ M.keys m where
@@ -214,25 +244,39 @@ dictSet :: VRef -> VRef -> VRef -> PSt -> SCont -> Result
 dictSet dRef ref0 ref1 st cont = case ref2val st dRef of
   D m -> setStoreValue dRef (D $ M.insert kRef ref1 m) st cont where
     kRef = fromMaybe ref0 $ dictKeyLookup m ref0 st
-  _ -> showError "Internal error (dictSet)"
+
+objectSet :: VRef -> String -> VRef -> PSt -> SCont -> Result
+objectSet oRef mid ref1 st cont = case ref2val st oRef of
+  O m -> setStoreValue oRef (O $ M.insert mid ref1 m) st cont
+
+extendMerge :: M.Map String VRef -> M.Map VRef VRef -> PSt -> Maybe (M.Map String VRef)
+extendMerge m m1 st = do
+   let (kl, vl) = unzip $ M.toList m1
+   kl<- mapM (unCharListRef st) kl
+   let m1' = M.fromList $ zip kl vl
+   return $ M.union m1' m
+  
 
 unCharListList :: PSt -> VRef -> Maybe String
 unCharListList st ref = case store st M.! ref of
   L els -> do
-    sl <- mapM (unCharList st) els
+    sl <- mapM (unCharListRef st) els
     return $ "[" ++ intercalate ", " sl ++ "]"
   _ -> Nothing
 
 unCharListDict :: PSt -> VRef -> Maybe String
 unCharListDict st ref = case store st M.! ref of
   L els -> do
-    sl <- mapM (unCharList st) els
+    sl <- mapM (unCharListRef st) els
     return $ "#{" ++ intercalate ", " sl ++ "}"
   _ -> Nothing
 
-unCharList ::  PSt -> VRef -> Maybe String
-unCharList st ref = case ref2val st ref of
-  L els -> mapM (unValChar st) els
+unCharList :: PSt -> [VRef] -> Maybe String
+unCharList st = mapM (unValChar st)
+
+unCharListRef ::  PSt -> VRef -> Maybe String
+unCharListRef st ref = case ref2val st ref of
+  L els -> unCharList st els
   _ -> Nothing
 
 unValChar :: PSt -> VRef -> Maybe Char
