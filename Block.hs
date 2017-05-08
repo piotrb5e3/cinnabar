@@ -4,6 +4,6 @@ import AbsCinnabar
 import StateTypes
 import {-# SOURCE #-} Statement
 
-runBlock :: Block -> PSt -> SCont -> ECont -> Result
-runBlock (SBlock stmts) st cont retCont = foldr bindCont cont stmts st where
-    bindCont stmt c st1 = runStatement stmt st1 c retCont
+runBlock :: Block -> SCont -> ECont -> PSt -> Result
+runBlock (SBlock stmts) cont retCont = foldr bindCont cont stmts where
+    bindCont stmt c = runStatement stmt c retCont

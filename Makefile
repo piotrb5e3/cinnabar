@@ -9,4 +9,4 @@ testParser: testParser.hs AbsCinnabar.hs ErrM.hs PrintCinnabar.hs SkelCinnabar.h
 	${GHC} -o $@ $<
 
 clean:
-	-rm -f testParser interpreter *.log *.aux *.hi *.o *.dvi
+	-rm -f testParser interpreter *.log *.aux *.hi *.o *.dvi *.hi-boot *.o-boot

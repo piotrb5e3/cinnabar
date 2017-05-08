@@ -12,7 +12,7 @@ incRef :: VRef -> VRef
 incRef (R i) = R $ i + 1
 initRef = R 0
 
-data Value = I Int | C Char | L [VRef] | B Bool | D (M.Map VRef VRef) | O (M.Map String VRef) | F Int ([VRef] -> PSt -> ECont -> Result)
+data Value = I Int | C Char | L [VRef] | B Bool | D (M.Map VRef VRef) | O (M.Map String VRef) | F Int ([VRef] -> ECont -> PSt -> Result)
 
 type SCont = PSt -> Result
 type ECont = VRef -> PSt -> Result
