@@ -3,7 +3,8 @@ module Program where
 import Control.Monad.Trans.State
 
 import AbsCinnabar
-import PState
+import StateTypes
+import StateModifiers
 import Statement
 
 runProgram :: Program -> PSt -> Result

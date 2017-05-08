@@ -1,7 +1,7 @@
 module Block where
 
 import AbsCinnabar
-import {-# SOURCE #-} PState
+import StateTypes
 import {-# SOURCE #-} Statement
 
 runBlock :: Block -> PSt -> SCont -> ECont -> Result

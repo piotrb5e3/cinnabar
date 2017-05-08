@@ -6,7 +6,8 @@ import qualified Data.Map.Strict as M
 
 import {-# SOURCE #-} Statement
 import AbsCinnabar
-import PState
+import StateTypes
+import StateModifiers
 import Block
 
 evalExpr :: Expr -> PSt -> ECont -> Result

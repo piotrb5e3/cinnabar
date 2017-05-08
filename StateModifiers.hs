@@ -1,45 +1,6 @@
-module PState where
+module StateModifiers where
 import qualified Data.Map.Strict as M
-
-import {-# SOURCE #-} Expression
-
-type Stdout = String
-type Stderr = String
-type WasErr = Bool
-type Result = (Stdout, Stderr, WasErr)
-
-newtype VRef = R Int deriving (Eq, Ord)
-
-incRef :: VRef -> VRef
-incRef (R i) = R $ i + 1
-initRef = R 0
-
-data Value = I Int | C Char | L [VRef] | B Bool | D (M.Map VRef VRef) | O (M.Map String VRef) | F Int ([VRef] -> PSt -> ECont -> Result)
-
-type SCont = PSt -> Result
-type ECont = VRef -> PSt -> Result
-type DECont = VRef -> VRef -> PSt -> Result
-
-data PSt = PSt { store :: M.Map VRef Value
-               , nextRef :: VRef
-               , vars  :: M.Map String VRef
-               , input :: String
-               }
-
-initialState :: String -> PSt
-initialState = PSt initStore initRef initVars where
-  initStore = M.fromList [
-    (R (-1), strFun),
-    (R (-2), readFun),
-    (R (-3), oInit),
-    (R (-4), oToStr),
-    (R (-5), O (M.fromList [
-      ("init", R (-3)),
-      ("to_str", R(-4))]))]
-  initVars = M.fromList [
-    ("str", R (-1)),
-    ("read", R (-2)),
-    ("object", R(-5))]
+import StateTypes
 
 setStoreValue :: VRef -> Value -> PSt -> SCont -> Result
 setStoreValue ref v st cont = cont (PSt (M.insert ref v $ store st) (nextRef st) (vars st) (input st))
@@ -75,20 +36,3 @@ allocAndSet val st cont = alloc st c0 where
 ref2val :: PSt -> VRef -> Value
 ref2val st ref = store st M.! ref
 
----- Builtins ----
-
-strFun :: Value
-strFun = F 1 c0 where
-  c0 = toStrHelper True . head
-
-readFun :: Value
-readFun = F 0 c0 where
-  c0 _ = readChar
-
-oInit :: Value
-oInit = F 1 c0 where
-  c0 _ = allocAndSet (I 0)
-
-oToStr :: Value
-oToStr = F 1 c0 where
-  c0 _ = charList "[object]"

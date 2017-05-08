@@ -2,7 +2,8 @@ module Statement where
 import qualified Data.Map.Strict as M
 
 import AbsCinnabar
-import {-# SOURCE #-} PState
+import StateTypes
+import StateModifiers
 import Expression
 import Block
 
