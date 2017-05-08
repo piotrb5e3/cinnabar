@@ -12,5 +12,5 @@ _*
 *.log
 *.pyg
 *.py
-testParser
+TestCinnabar
 interpreter

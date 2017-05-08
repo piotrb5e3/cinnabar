@@ -17,4 +17,15 @@ assert l == [7, 2, 3];
 assert z == [4, 1, 1];
 assert vv == [9, 9, 9];
 
+a = 1;
+b = 2;
+aabb = fun(a) {
+  b = 49 + a;
+}; 
+
+aabb(11);
+
+assert a == 1;
+assert b == 2;
+
 print "OK\n";

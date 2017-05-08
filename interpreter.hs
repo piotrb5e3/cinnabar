@@ -7,6 +7,8 @@ import System.Exit ( exitFailure, exitSuccess )
 
 import Control.Monad
 
+import ErrM
+
 import LexCinnabar
 import ParCinnabar
 import SkelCinnabar
@@ -15,8 +17,6 @@ import AbsCinnabar
 
 import Builtins
 import Program
-
-import ErrM
 
 type ParseFun a = [Token] -> Err a
 
@@ -51,10 +51,11 @@ run v p s = let ts = myLLexer s in case p ts of
 usage :: IO ()
 usage = do
   putStrLn $ unlines
-    [ "usage: Call with one of the following argument combinations:"
+    [ "Usage: ./interpreter [--help] [-v] FILE"
+    , "Run contents of FILE."
+    , "Options:"
     , "  --help          Display this help message."
-    , "  FILE            Parse content of FILE."
-    , "  -v FILE         Verbose mode. Parse content of file verbosely."
+    , "  -v              Verbose mode."
     ]
   exitFailure
 
@@ -62,6 +63,7 @@ main :: IO ()
 main = do
   args <- getArgs
   case args of
-    ["--help"] -> usage
+    "--help":_ -> usage
     ["-v", fname] -> runFile 2 pProgram fname
     [fname] -> runFile 0 pProgram fname
+    _ -> usage
