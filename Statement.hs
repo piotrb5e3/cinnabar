@@ -22,7 +22,7 @@ runStatement (SCondElse e tb fb) cont retCont = evalExpr e c0 where
   tc = runBlock tb cont retCont
   fc = runBlock fb cont retCont
 
-runStatement (SAssing l e) cont retCont = evalExpr e c0 where
+runStatement (SAssign l e) cont retCont = evalExpr e c0 where
   c0 ref = assignRefToLVal l ref cont
 
 runStatement (SReturn e) cont retCont = evalExpr e retCont

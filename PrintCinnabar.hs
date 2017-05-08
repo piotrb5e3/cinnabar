@@ -98,7 +98,7 @@ instance Print Stmt where
     SWhile expr block -> prPrec i 0 (concatD [doc (showString "while"), doc (showString "("), prt 0 expr, doc (showString ")"), prt 0 block])
     SCond expr block -> prPrec i 0 (concatD [doc (showString "if"), doc (showString "("), prt 0 expr, doc (showString ")"), prt 0 block])
     SCondElse expr block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), doc (showString "("), prt 0 expr, doc (showString ")"), prt 0 block1, doc (showString "else"), prt 0 block2])
-    SAssing lval expr -> prPrec i 0 (concatD [prt 0 lval, doc (showString "="), prt 0 expr, doc (showString ";")])
+    SAssign lval expr -> prPrec i 0 (concatD [prt 0 lval, doc (showString "="), prt 0 expr, doc (showString ";")])
     SReturn expr -> prPrec i 0 (concatD [doc (showString "return"), prt 0 expr, doc (showString ";")])
     SPrint expr -> prPrec i 0 (concatD [doc (showString "print"), prt 0 expr, doc (showString ";")])
     SAssert expr -> prPrec i 0 (concatD [doc (showString "assert"), prt 0 expr, doc (showString ";")])

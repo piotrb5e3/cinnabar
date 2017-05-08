@@ -12,7 +12,7 @@ SWhile.    Stmt ::= "while" "(" Expr ")" Block ;
 SCond.     Stmt ::= "if" "(" Expr ")" Block ;
 SCondElse. Stmt ::= "if" "(" Expr ")" Block "else" Block ;
 
-SAssing.   Stmt ::= LVal "=" Expr ";" ;
+SAssign.   Stmt ::= LVal "=" Expr ";" ;
 _.         LVal ::= LVal1 ;
 ATuple.    LVal ::= "{" [LVal1] "}";
 separator  nonempty LVal1 "," ;

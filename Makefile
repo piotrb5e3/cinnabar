@@ -8,5 +8,10 @@ interpreter: interpreter.hs AbsCinnabar.hs ErrM.hs Builtins.hs Block.hs StateMod
 TestCinnabar: TestCinnabar.hs AbsCinnabar.hs ErrM.hs PrintCinnabar.hs SkelCinnabar.hs LexCinnabar.hs ParCinnabar.hs
 	${GHC} -o $@ $<
 
+parsers:
+	bnfc --haskell cinnabar.cf
+	happy -gca ParCinnabar.y
+	alex -g LexCinnabar.x
+
 clean:
 	-rm -f TestCinnabar interpreter *.log *.aux *.hi *.o *.dvi *.hi-boot *.o-boot

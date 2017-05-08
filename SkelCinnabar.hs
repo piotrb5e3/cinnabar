@@ -23,7 +23,7 @@ transStmt x = case x of
   SWhile expr block -> failure x
   SCond expr block -> failure x
   SCondElse expr block1 block2 -> failure x
-  SAssing lval expr -> failure x
+  SAssign lval expr -> failure x
   SReturn expr -> failure x
   SPrint expr -> failure x
   SAssert expr -> failure x

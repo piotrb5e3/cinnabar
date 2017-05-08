@@ -79,7 +79,7 @@ Stmt :: { Stmt }
 Stmt : 'while' '(' Expr ')' Block { AbsCinnabar.SWhile $3 $5 }
      | 'if' '(' Expr ')' Block { AbsCinnabar.SCond $3 $5 }
      | 'if' '(' Expr ')' Block 'else' Block { AbsCinnabar.SCondElse $3 $5 $7 }
-     | LVal '=' Expr ';' { AbsCinnabar.SAssing $1 $3 }
+     | LVal '=' Expr ';' { AbsCinnabar.SAssign $1 $3 }
      | 'return' Expr ';' { AbsCinnabar.SReturn $2 }
      | 'print' Expr ';' { AbsCinnabar.SPrint $2 }
      | 'assert' Expr ';' { AbsCinnabar.SAssert $2 }

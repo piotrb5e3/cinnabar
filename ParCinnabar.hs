@@ -410,7 +410,7 @@ happyReduction_12 (happy_x_4 `HappyStk`
 	 = case happyOut12 happy_x_1 of { happy_var_1 -> 
 	case happyOut15 happy_x_3 of { happy_var_3 -> 
 	happyIn11
-		 (AbsCinnabar.SAssing happy_var_1 happy_var_3
+		 (AbsCinnabar.SAssign happy_var_1 happy_var_3
 	) `HappyStk` happyRest}}
 
 happyReduce_13 = happySpecReduce_3  7# happyReduction_13
