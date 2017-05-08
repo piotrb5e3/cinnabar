@@ -1,0 +1,3 @@
+x = extend object with #{ "x": 1337};
+
+print x.y;

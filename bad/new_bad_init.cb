@@ -1,0 +1,3 @@
+x = extend object with #{ "init": 42};
+
+y = new x();

@@ -1,0 +1,3 @@
+x = extend object with #{ "to_str": lambda self, something: "SEMI-BAD"};
+
+print x;

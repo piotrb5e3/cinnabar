@@ -1,0 +1,4 @@
+x = 11;
+y = extend object with #{ "x": 11};
+
+assert x != y;

@@ -1,0 +1,3 @@
+x = extend object with #{ "to_str": "BAD!"};
+
+print x;

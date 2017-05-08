@@ -126,7 +126,7 @@ evalExpr (EAt e0 e1) cont = eval2Expr e0 e1 c0 where
     (O m, _) -> showError "Object member names must be non-empty strings"
     (D m, _) -> case dictKeyLookup m ref2 st of
       Just kRef -> cont (m M.! kRef) st
-      Nothing -> showError "Key does not exist in dict"
+      Nothing -> showError "No such key in dictionary"
     _ -> showError "Type cannot be subscripted"
 
 evalExpr (EExtend e0 e1) cont = eval2Expr e0 e1 c0 where
@@ -144,7 +144,7 @@ evalExpr (ENew e) cont = evalExpr e c0 where
         fCont2 refs cont2 = allocAndSet (O m) c1 where
          c1 nRef = fCont (nRef:refs) (const (cont2 nRef))
       _ -> showError "Object's member \"init\" in not a function"
-    _ -> showError "Calling new with a non-object value"
+    _ -> showError "Using new with a non-object value"
 
 evalExpr (EChar c) cont = charVal c cont
 evalExpr (EString s) cont = charList s cont

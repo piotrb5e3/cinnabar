@@ -1,0 +1,6 @@
+x = fun (a, b) {
+  z = a + b;
+  return a ^ z;
+};
+
+print x(17);

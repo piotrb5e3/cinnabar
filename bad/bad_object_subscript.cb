@@ -1,0 +1,3 @@
+x = extend object with #{"x": 42};
+
+x[1];
