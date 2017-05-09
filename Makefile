@@ -18,4 +18,4 @@ cinnabar.pdf: cinnabar.tex
 	pdflatex -shell-escape -interaction=nonstopmode -file-line-error cinnabar.tex
 
 clean:
-	-rm -rf TestCinnabar interpreter _minted-.cinnabar.tex *.log *.aux *.hi *.o *.dvi *.hi-boot *.o-boot *.pdf
+	-rm -rf TestCinnabar interpreter _minted* *.log *.aux *.hi *.o *.dvi *.hi-boot *.o-boot *.pdf
