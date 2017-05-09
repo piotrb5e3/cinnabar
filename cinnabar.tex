@@ -57,7 +57,7 @@ Comparing values of different types always results in a runtime error.
 \item Characters and integers support ordering comparisons.
 \item Booleans, lists, dictionaries, objects and functions can only be tested for equality.
 \item Lists are equal iff their lengths are equal and elements on equivalent positions are comparable and equal.
-\item Dictionaries are equal iff their key sets are equal and, for each key, assigned values are comparable and equal.
+\item Dictionaries are equal iff their key sets are comparable and equal and, for each key, assigned values are comparable and equal.
 \item Objects and functions are equal only to themselves.
 \end{itemize}
 
@@ -72,7 +72,7 @@ Functions are implemented as closures -- they persist the variable-to-reference 
 
 \subsection*{Objects}
 
-Cinnabar uses prototype inheritance: {\tt new} operator creates a shallow copy and calls the {\tt init} method with given parameters; {\tt extend with} operator creates a shallow copy, then adds or replaces fields and methods with data from a provided dictionary. Only \emph{string} type keys are allowed.\\
+Cinnabar uses prototype inheritance: {\tt new} operator creates a factory function that returns a shallow copy and calls the {\tt init} method on it with given parameters; {\tt extend with} operator creates a shallow copy, then adds or replaces fields and methods with data from a provided dictionary. Only \emph{string} type keys are allowed.\\
 Object methods are internally passed the object as the first parameter.
 
 \subsection*{Built-ins}
@@ -324,6 +324,11 @@ All other symbols are terminals.\\
 \begin{listing}[H]
 \inputminted{python}{good/inherit.cb}
 \caption{Inheritance example}
+\end{listing}
+
+\begin{listing}[H]
+\inputminted{python}{good/qsort.cb}
+\caption{Example quicksort implementation in cinnabar}
 \end{listing}
 
 \end{document}

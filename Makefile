@@ -13,5 +13,9 @@ parsers:
 	happy -gca ParCinnabar.y
 	alex -g LexCinnabar.x
 
+doc: cinnabar.pdf
+cinnabar.pdf: cinnabar.tex
+	pdflatex -shell-escape -interaction=nonstopmode -file-line-error cinnabar.tex
+
 clean:
-	-rm -f TestCinnabar interpreter *.log *.aux *.hi *.o *.dvi *.hi-boot *.o-boot
+	-rm -rf TestCinnabar interpreter _minted-.cinnabar.tex *.log *.aux *.hi *.o *.dvi *.hi-boot *.o-boot *.pdf
