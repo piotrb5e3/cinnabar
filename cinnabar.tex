@@ -56,8 +56,8 @@ Comparing values of different types always results in a runtime error.
 \begin{itemize}
 \item Characters and integers support ordering comparisons.
 \item Booleans, lists, dictionaries, objects and functions can only be tested for equality.
-\item Lists are equal iff their lengths are equal, and items on all positions are equal.
-\item Dictionaries are equal iff their key sets are equal, and for each key, assigned values are equal.
+\item Lists are equal iff their lengths are equal and elements on equivalent positions are comparable and equal.
+\item Dictionaries are equal iff their key sets are equal and, for each key, assigned values are comparable and equal.
 \item Objects and functions are equal only to themselves.
 \end{itemize}
 

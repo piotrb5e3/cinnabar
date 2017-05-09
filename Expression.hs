@@ -291,29 +291,26 @@ compareValues ref1 ref2 op st = case (ref2val st ref1, op, ref2val st ref2) of
     (C c1, _, C c2) -> return $ relOpFun op c1 c2
     (B b1, Eq, B b2) -> return $ b1 == b2
     (B b1, Ne, B b2) -> return $ b1 /= b2
-    (L l1, Eq, L l2) -> listEqCompare l1 l2 st
-    (L l1, Ne, L l2) -> not <$> listEqCompare l1 l2 st
-    (D d1, Eq, D d2) -> dictEqCompare d1 d2 st
-    (D d1, Ne, D d2) -> not <$> dictEqCompare d1 d2 st
+    (L l1, Eq, L l2) -> return $ listEqCompare l1 l2 st
+    (L l1, Ne, L l2) -> return . not $ listEqCompare l1 l2 st
+    (D d1, Eq, D d2) -> return $ dictEqCompare d1 d2 st
+    (D d1, Ne, D d2) -> return . not $ dictEqCompare d1 d2 st
     (O _, Eq, O _) -> return $ ref1 == ref2
     (O _, Ne, O _) -> return $ ref1 /= ref2
     (F _ _, Eq, F _ _) -> return $ ref1 == ref2
     (F _ _, Ne, F _ _) -> return $ ref1 /= ref2
     _ -> Nothing
 
-listEqCompare :: [VRef] -> [VRef] -> PSt -> Maybe Bool
-listEqCompare l1 l2 st = if length l1 /= length l2
-  then return False
-  else fmap and $ mapM (\(r1, r2) -> compareValues r1 r2 Eq st) $ zip l1 l2
+listEqCompare :: [VRef] -> [VRef] -> PSt -> Bool
+listEqCompare l1 l2 st = and $ (length l1 == length l2) : zipWith cFun l1 l2 where
+  cFun r1 r2 = fromMaybe False $ compareValues r1 r2 Eq st
 
-dictEqCompare :: M.Map VRef VRef -> M.Map VRef VRef -> PSt -> Maybe Bool
-dictEqCompare m1 m2 st = if M.size m1 /= M.size m2
-  then return False
-  else do
+dictEqCompare :: M.Map VRef VRef -> M.Map VRef VRef -> PSt -> Bool
+dictEqCompare m1 m2 st = and $ (M.size m1 == M.size m2) : fromMaybe [False] comps where
+  comps = do
     let k1 = M.keys m1
-    case mapM (\r -> dictKeyLookup m2 r st) k1 of
-      Nothing -> return False
-      Just k2 -> fmap and $ mapM (\(r1, r2) -> compareValues (m1 M.! r1) (m2 M.! r2) Eq st) $ zip k1 k2
+    k2 <- mapM (\r -> dictKeyLookup m2 r st) k1
+    mapM (\(r1, r2) -> compareValues (m1 M.! r1) (m2 M.! r2) Eq st) $ zip k1 k2
 
 relOpFun :: (Eq a, Ord a) => RelOp -> (a -> a -> Bool)
 relOpFun op = case op of

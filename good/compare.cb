@@ -1,0 +1,33 @@
+assert [] == "";
+assert [1, 2, 3] == [3 - i for i in [2, 1, 0]];
+assert [1, 2] != [1];
+assert [1, 2] != [2, 1];
+assert [1, 2] != ['a', 2];
+
+assert 1 != 2;
+assert 5 - 3 == 3 + (-1);
+assert 1 <= 3;
+assert 5 > -10;
+
+assert #{1: 2} == #{2 - 1: 4 - 2};
+assert #{1:2} != #{};
+assert #{} == #{};
+assert #{1: 2, 2: 3} == #{2: 3, 1: 2};
+assert #{1: 2} != #{"1": 2};
+assert #{1: 2} != #{1: "2"};
+
+o = new object();
+assert o == o;
+assert o != object;
+
+x = lambda x: x;
+y = lambda x: x;
+assert x != y;
+
+assert "Hello" == ['H', 'e', 'l', 'l', 'o'];
+assert "Hello" != "World";
+
+assert 'a' != 'b';
+assert 'a' < 'b';
+
+print "OK\n";

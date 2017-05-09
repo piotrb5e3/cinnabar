@@ -36,5 +36,7 @@ ll2 = [str(o) for o.foo in ll];
 assert o.foo == 3;
 assert ll2 == ["1", "2", "3"];
 
+assert [1] != ['a'];
+
 print "OK\n";
 
