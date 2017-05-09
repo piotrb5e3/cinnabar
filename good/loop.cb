@@ -1,7 +1,7 @@
 x = 99;
 while (x > 0) {
-  print x; print " bottles of beer on the wall, "; print x; print " bottles of beer.\n";
-  print "Take one down, pass it around, "; print x - 1; print " bottles of beer on the wall.\n";
+  print str(x) + " bottles of beer on the wall, " + str(x) + " bottles of beer.\n"
+    + "Take one down, pass it around, " + str(x - 1) + " bottles of beer on the wall.\n";
   x = x - 1;
 }
 

@@ -1,0 +1,42 @@
+empty = extend object with #{"to_str": lambda self: "empty"};
+
+node_factory = new extend object with #{
+  "init": fun(self, val) {
+    self.val = val;
+  },
+  "lnext": empty,
+  "rnext": empty, 
+  "to_str": fun(self) {
+    return "(" + str(self.val) + " " + str(self.lnext) + " " + str(self.rnext) + ")";
+  },
+};
+
+insert = fun (tree, val) {
+  rh = fun (insert, tree, val) {
+    if(tree == empty) {
+      return node_factory(val);
+    }
+    if(val > tree.val) {
+      tree.rnext = insert(insert, tree.rnext, val);
+    } else {
+      tree.lnext = insert(insert, tree.lnext, val);
+    }
+    return tree;
+  };
+  return rh(rh, tree, val);
+};
+
+T = empty;
+
+T = insert(T, 23);
+T = insert(T, 11);
+T = insert(T, 1);
+T = insert(T, 34);
+T = insert(T, 99);
+T = insert(T, 31);
+T = insert(T, 42);
+T = insert(T, 69);
+T = insert(T, 5);
+T = insert(T, 81);
+
+print T;

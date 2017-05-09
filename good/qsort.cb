@@ -1,0 +1,45 @@
+partition = fun (A, lo, hi) {
+  pivot = A[hi];
+  i = lo - 1;
+  j = lo;
+  while (j < hi) {
+    if (A[j] <= pivot) {
+      i = i + 1;
+      {A[i], A[j]} = [A[j], A[i]];
+    }
+    j = j + 1;
+  }
+  {A[i + 1], A[hi]} = [A[hi], A[i + 1]];
+  return i+1;
+};
+
+quicksort = fun (A) {
+  qsh = fun (quicksort, A, lo, hi){
+    if (lo < hi) {
+      p = partition(A, lo, hi);
+      quicksort(quicksort, A, lo, p - 1);
+      quicksort(quicksort, A, p + 1, hi);
+    }
+  };
+  qsh(qsh, A, 0, A.length - 1);  
+};
+
+ll = [1, 2, 3, 4, 5];
+ll2 = [5, 4, 3, 2, 1];
+ll3 = [24, 34, 2435455, 346, 535, 1, 2, 4, 3431, 25, 45, 43436, 3467, 5, 6275, 2, 48, 628, 5, 2, 245, 5, 235];
+ll4 = [1];
+ll5 = [];
+
+quicksort(ll);
+quicksort(ll2);
+quicksort(ll3);
+quicksort(ll4);
+quicksort(ll5);
+
+assert ll == [1, 2, 3, 4, 5];
+assert ll2 == [1, 2, 3, 4, 5];
+assert ll3 == [1, 2, 2, 2, 4, 5, 5, 5, 24, 25, 34, 45, 48, 235, 245, 346, 535, 628, 3431, 3467, 6275, 43436, 2435455];
+assert ll4 == [1];
+assert ll5 == [];
+
+print "OK\n";

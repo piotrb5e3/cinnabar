@@ -33,6 +33,6 @@ scania = new truck_prototype("Scania");
 assert volvo.wheel_count() == 16;
 assert volvo.make == "Volvo";
 assert str(volvo) == "Beep! Beep! I'm a truck!";
-
 assert scania.make == "Scania";
+
 print "OK\n";

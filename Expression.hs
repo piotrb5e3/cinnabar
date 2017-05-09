@@ -202,7 +202,8 @@ toStrHelper quoteStr ref cont st = case ref2val st ref of
           Just str -> charList str cont st2
         procElem elRef cont1 = toStrHelper True elRef appendElem where
           appendElem ref2 = listAppend ref ref2 cont1
-  B b -> charList (show b) cont st
+  B True -> charList "true" cont st
+  B False -> charList "false" cont st
   D m -> allocAndSet (L []) c0 st where
     c0 ref = M.foldrWithKey procElem cFin m where
       cFin st2 = case unCharListDict st2 ref of

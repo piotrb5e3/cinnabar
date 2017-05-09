@@ -1,0 +1,22 @@
+assert str("Hello" + " World!\n") == "\"Hello World!\n\"";
+assert str(true) == "true";
+assert str(false) == "false";
+assert str(1337) == "1337";
+assert str([1, "ABC", [1, "A", []]]) == "[1, \"ABC\", [1, \"A\", []]]";
+assert str("Hello " * 2 + "World!\n") == "\"Hello Hello World!\n\"";
+assert str('l') == "'l'";
+assert str([]) == "[]";
+assert str(#{"x": 11, [1, new object()]: 42}) == "#{\"x\": 11, [1, [object]]: 42}";
+mobile = extend object with #{
+  "wheels": 0,
+  "type": "",
+  "to_str": lambda self: "Mobile {type:" + self.type + ", wheels:" + str(self.wheels) + "}",
+};
+
+car = extend mobile with #{ "wheels": 4, "type" : "car"};
+scooter = extend mobile with #{ "wheels": 2, "type" : "scooter"};
+
+assert str(car) == "Mobile {type:car, wheels:4}";
+assert str(scooter) == "Mobile {type:scooter, wheels:2}";
+
+print "OK\n";
