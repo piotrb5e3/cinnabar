@@ -1,4 +1,4 @@
-#Cinnabar
+# Cinnabar
 Cinnabar is a simple language created for the Programming Languages and Paradigms course.
 
 ## Requirements
